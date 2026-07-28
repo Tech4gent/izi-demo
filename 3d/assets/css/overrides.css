@@ -1,0 +1,33 @@
+/* 3D-вариант: сцена за контентом, панели полупрозрачные */
+
+canvas#webgl {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.vignette {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 52%, rgba(4, 4, 6, 0.8) 100%);
+}
+
+body { background: transparent; }
+
+/* хиро: вместо фото - сцена (3D-логотип фронтально), PNG-плашка не дублируется */
+.hero__bg, .hero__shade, .hero__logo { display: none; }
+
+/* контент-секции - тёмные панели, сцена мерцает сквозь */
+.section { background: rgba(6, 6, 8, 0.78); }
+.perf { background: rgba(3, 3, 4, 0.92); }
+.marquee { background: rgba(5, 5, 7, 0.55); }
+.footer { background: rgba(5, 5, 6, 0.92); }
+
+/* финал: полностью открываем сцену (камера возвращается к логотипу) */
+.final { background: transparent; }
+.final__bg { display: none; }
+.final::before { background: none; }
