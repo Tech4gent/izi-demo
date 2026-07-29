@@ -121,6 +121,42 @@ CLUBS.forEach((club) => {
     );
 });
 
+/* -------- Перф-карточки: эффектный выход -------- */
+/* цифры значения крутятся как слот-машина и «защёлкиваются» на финале */
+function scrambleDigits(el, duration) {
+  const node = el.childNodes[0]; // текст до <em>
+  const final = node.textContent;
+  const start = performance.now();
+  (function tick(now) {
+    const p = (now - start) / duration;
+    if (p >= 1) { node.textContent = final; return; }
+    node.textContent = final.replace(/\d/g, (d) => (Math.random() < p ? d : Math.floor(Math.random() * 10)));
+    requestAnimationFrame(tick);
+  })(start);
+}
+
+const perfcards = gsap.utils.toArray('.perfcards .perfcard');
+gsap.set(perfcards, { opacity: 0, x: (i) => (i === 0 ? -90 : 90), rotateY: (i) => (i === 0 ? 10 : -10), transformPerspective: 900 });
+gsap.set('.perfcard__corner', { scale: 2.4, opacity: 0 });
+ScrollTrigger.create({
+  trigger: '.perfcards',
+  start: 'top 80%',
+  once: true,
+  onEnter: () => {
+    const tl = gsap.timeline();
+    tl.to(perfcards, { opacity: 1, x: 0, rotateY: 0, duration: 0.85, ease: 'power4.out', stagger: 0.16 })
+      .to('.perfcard__corner', { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(2.2)', stagger: 0.07 }, '-=0.45')
+      .add(() => {
+        perfcards.forEach((c, i) => {
+          setTimeout(() => {
+            c.classList.add('is-on');
+            scrambleDigits(c.querySelector('.perfcard__value'), 800);
+          }, i * 160);
+        });
+      }, '-=0.35');
+  },
+});
+
 /* -------- Факты: выезд + энергия окрашивает текст (жёлтый → обычный) -------- */
 const facts = gsap.utils.toArray('.facts .fact');
 gsap.set(facts, { opacity: 0, y: 44 });

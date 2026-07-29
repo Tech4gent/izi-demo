@@ -142,6 +142,15 @@
   color: var(--yellow);
 }
 .next .perfcard p { margin: 0; max-width: 52ch; color: var(--mut); }
+@keyframes perf-charge {
+  0% { box-shadow: 0 0 0 rgba(43, 89, 255, 0); }
+  30% {
+    box-shadow: 0 0 52px rgba(43, 89, 255, 0.5), inset 0 0 36px rgba(43, 89, 255, 0.14);
+    border-color: rgba(43, 89, 255, 0.9);
+  }
+  100% { box-shadow: 0 0 0 rgba(43, 89, 255, 0); }
+}
+.next .perfcard.is-on { animation: perf-charge 1.4s ease-out both; }
 
 /* -------- Карта сети: настоящая, в тёмной стилизации -------- */
 .mapbox {
@@ -272,13 +281,14 @@
 }
 .next .door__no { position: static; margin: 0 0 3px; }
 .next .door__addr { font-size: 12px; line-height: 1.45; color: rgba(10, 10, 12, 0.72); }
+.next .door__plate { margin-bottom: 10px; }
 .next .door__map {
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(10, 10, 12, 0.15);
   aspect-ratio: auto;
-  height: 190px;
-  margin: 14px 0 2px;
+  height: 235px;
+  margin: 4px 0 2px;
   background: #e8eaed;
 }
 .next .door__map iframe { width: 100%; height: 100%; border: 0; display: block; }
