@@ -53,7 +53,6 @@ function applyCity(code) {
   const city = CITIES[code];
   document.getElementById('cityPickName').textContent = city.name;
   document.getElementById('heroTagCity').textContent = city.name;
-  document.getElementById('statClubs').textContent = city.clubs;
   document.getElementById('statCity').textContent = city.name;
   document.getElementById('mapHudCity').textContent = city.hud;
   if (factsRevealed) document.getElementById('factClubsVal').textContent = city.clubs;

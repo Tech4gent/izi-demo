@@ -5,6 +5,13 @@
    4) настоящая тёмная карта сети с бронью, 5) компактные карточки
    ============================================================ */
 
+/* -------- Плотная вёрстка: воздух между секциями сильно ужат -------- */
+.next .section { padding: clamp(44px, 5.5vw, 72px) var(--pad); }
+.next .section__head { margin-bottom: clamp(26px, 3.5vw, 42px); }
+.next .final { padding: clamp(64px, 8vw, 104px) var(--pad); }
+.next .gallery { margin-top: clamp(30px, 4vw, 52px); }
+.next .hero__stats { padding-bottom: 20px; }
+
 /* -------- Выбор города в хедере -------- */
 .city-pick {
   display: inline-flex;
@@ -293,3 +300,17 @@
 }
 .next .door__map iframe { width: 100%; height: 100%; border: 0; display: block; }
 .next .door__actions { padding-top: 18px; }
+@media (max-width: 640px) {
+  /* на узкой карточке правый блок не помещается рядом с плашкой -
+     раскладываем в поток: плашка → CLUB 0X + адрес → карта → кнопки */
+  .next .door__meta {
+    position: static;
+    order: 2;
+    text-align: left;
+    max-width: none;
+    margin: 2px 0 8px;
+  }
+  .next .door__plate { order: 1; }
+  .next .door__map { order: 3; height: 200px; }
+  .next .door__actions { order: 4; }
+}
