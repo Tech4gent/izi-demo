@@ -59,6 +59,9 @@ function applyCity(code) {
   if (factsRevealed) document.getElementById('factClubsVal').textContent = city.clubs;
   document.getElementById('factClubsName').textContent = city.factName;
   document.getElementById('factClubsText').textContent = city.factText;
+  const footerVk = document.getElementById('footerVk');
+  footerVk.href = city.vk;
+  footerVk.textContent = 'VK · ' + city.name;
   document.querySelectorAll('.doors').forEach((g) => { g.hidden = g.dataset.city !== code; });
   if (netmap) {
     netmap.closePopup();
@@ -89,6 +92,7 @@ netmap = L.map('netmap', {
   scrollWheelZoom: false, // колесо остаётся за прокруткой страницы
   attributionControl: true,
 });
+netmap.attributionControl.setPrefix(false); // только © OpenStreetMap · © CARTO
 if (L.Browser.mobile) netmap.dragging.disable(); // на тач карту двигают кнопками зума, страница скроллится свободно
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   subdomains: 'abcd',

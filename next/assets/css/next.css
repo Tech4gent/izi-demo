@@ -263,8 +263,15 @@
 
 /* -------- Карточки клубов: компактные -------- */
 .next .door { position: relative; min-height: 0; }
-.next .door__no { position: absolute; top: 26px; right: 24px; margin: 0; }
-.next .door__addr { font-size: 14px; color: rgba(10, 10, 12, 0.72); }
+.next .door__meta { /* CLUB · 0X и адрес под ним - правый верхний угол */
+  position: absolute;
+  top: 26px;
+  right: 24px;
+  text-align: right;
+  max-width: 160px;
+}
+.next .door__no { position: static; margin: 0 0 3px; }
+.next .door__addr { font-size: 12px; line-height: 1.45; color: rgba(10, 10, 12, 0.72); }
 .next .door__map {
   border-radius: 12px;
   overflow: hidden;
