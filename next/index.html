@@ -7,6 +7,7 @@
   <title>IZI - компьютерный клуб (версия с правками). NO GAME - NO LIFE</title>
   <meta name="description" content="Сеть компьютерных клубов IZI: Москва и Хабаровск. RTX 5080, мониторы до 600 Гц, пинг 0.5 ms, честные цены, 24/7.">
   <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="assets/css/next.css">
   <link rel="icon" href="../assets/img/logo-white.png" type="image/png">
 </head>
@@ -55,7 +56,7 @@
       </div>
       <div class="hero__shade"></div>
       <div class="hero__content">
-        <div class="hero__tag" data-reveal>СЕТЬ КОМПЬЮТЕРНЫХ КЛУБОВ · МОСКВА · ХАБАРОВСК</div>
+        <div class="hero__tag" data-reveal>СЕТЬ КОМПЬЮТЕРНЫХ КЛУБОВ · <span id="heroTagCity">МОСКВА</span></div>
         <img class="hero__logo" src="../assets/img/logo-white.png" alt="IZI" data-reveal>
         <h1 class="hero__title" data-split>NO GAME<br>NO LIFE</h1>
         <p class="hero__sub" data-reveal>Топовое железо, пинг как на турнирах и цены, за которые не стыдно.<br>Заходи и играй - всё уже настроено.</p>
@@ -86,7 +87,6 @@
       <div class="section__head">
         <div class="label" data-reveal>// ПОЧЕМУ IZI</div>
         <h2 class="h2" data-split>ПРИЧИНА ПРИЙТИ -<br>ЖЕЛЕЗО И АТМОСФЕРА</h2>
-        <div class="energyline" data-reveal aria-hidden="true"></div>
       </div>
       <div class="facts">
         <article class="fact" data-tilt>
@@ -109,9 +109,9 @@
         </article>
         <article class="fact" data-tilt>
           <div class="fact__num">ФАКТ 04</div>
-          <div class="fact__value"><span data-count="5">0</span> <em>клубов</em></div>
-          <div class="fact__name">МОСКВА И ХАБАРОВСК</div>
-          <p>Белорусская, Курская, Профсоюзная, Калинина и Краснореченская. Своя атмосфера - один уровень.</p>
+          <div class="fact__value"><span id="factClubsVal">3</span> <em>клуба</em></div>
+          <div class="fact__name" id="factClubsName">В МОСКВЕ</div>
+          <p id="factClubsText">Белорусская, Курская и Профсоюзная. Своя атмосфера - один уровень.</p>
         </article>
       </div>
       <div class="club__wide" data-reveal>
@@ -307,94 +307,20 @@
         <div class="label" data-reveal>// АДРЕСА</div>
         <h2 class="h2" data-split>НАЙДИ СВОЙ КЛУБ</h2>
       </div>
-      <div class="citytabs" data-reveal>
-        <button class="citytab is-active" data-citytab="msk" type="button">МОСКВА</button>
-        <button class="citytab" data-citytab="khv" type="button">ХАБАРОВСК</button>
-      </div>
-
-      <!-- Стилизованная карта сети -->
+      <!-- Настоящая карта в тёмной стилизации: клик по клубу - окно с адресом и бронью -->
       <div class="mapbox" data-reveal>
         <div class="mapbox__hud">
           <span id="mapHudCity">MSK // 55.75 N · 37.61 E</span>
           <span>СЕТЬ IZI · ОНЛАЙН</span>
         </div>
-
-        <!-- МОСКВА -->
-        <svg class="citymap" data-map="msk" viewBox="0 0 760 420" role="img" aria-label="Карта клубов IZI в Москве">
-          <defs>
-            <radialGradient id="mapfade" cx="50%" cy="50%" r="65%">
-              <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
-              <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
-            </radialGradient>
-            <mask id="mapmask"><rect width="760" height="420" fill="url(#mapfade)"/></mask>
-          </defs>
-          <g mask="url(#mapmask)">
-            <g class="citymap__grid">
-              <path d="M0 70h760M0 140h760M0 210h760M0 280h760M0 350h760M95 0v420M190 0v420M285 0v420M380 0v420M475 0v420M570 0v420M665 0v420"/>
-            </g>
-            <!-- Москва-река -->
-            <path class="citymap__river" d="M120 40 C 240 130, 260 230, 380 250 C 480 265, 520 330, 660 390"/>
-            <!-- кольца: Садовое, ТТК, МКАД -->
-            <ellipse class="citymap__road" cx="380" cy="210" rx="86" ry="64"/>
-            <ellipse class="citymap__road" cx="380" cy="210" rx="150" ry="112"/>
-            <ellipse class="citymap__road citymap__road--dim" cx="380" cy="210" rx="292" ry="188"/>
-            <!-- проспекты -->
-            <path class="citymap__road citymap__road--dim" d="M380 210 L 250 30 M380 210 L 560 44 M380 210 L 640 300 M380 210 L 210 386 M380 210 L 96 210"/>
-            <!-- пинг-линии между клубами -->
-            <path class="pingline" d="M332 128 L 468 196 L 300 306 Z"/>
-            <text class="citymap__ping" x="416" y="150">0.5 ms</text>
-          </g>
-          <!-- клубы -->
-          <a class="mk" href="https://yandex.ru/maps/-/CTrNyO5Z" target="_blank" rel="noopener">
-            <circle class="mk__pulse" cx="332" cy="128" r="9"/>
-            <circle class="mk__dot" cx="332" cy="128" r="6"/>
-            <text class="mk__label" x="348" y="124">БЕЛОРУССКАЯ</text>
-          </a>
-          <a class="mk" href="https://yandex.ru/maps/-/CTrNyDyw" target="_blank" rel="noopener">
-            <circle class="mk__pulse" cx="468" cy="196" r="9"/>
-            <circle class="mk__dot" cx="468" cy="196" r="6"/>
-            <text class="mk__label" x="484" y="192">КУРСКАЯ</text>
-          </a>
-          <a class="mk" href="https://yandex.ru/maps/-/CTrNyTJE" target="_blank" rel="noopener">
-            <circle class="mk__pulse" cx="300" cy="306" r="9"/>
-            <circle class="mk__dot" cx="300" cy="306" r="6"/>
-            <text class="mk__label" x="316" y="330">ПРОФСОЮЗНАЯ</text>
-          </a>
-        </svg>
-
-        <!-- ХАБАРОВСК -->
-        <svg class="citymap" data-map="khv" viewBox="0 0 760 420" role="img" aria-label="Карта клубов IZI в Хабаровске" hidden>
-          <g mask="url(#mapmask)">
-            <g class="citymap__grid">
-              <path d="M0 70h760M0 140h760M0 210h760M0 280h760M0 350h760M95 0v420M190 0v420M285 0v420M380 0v420M475 0v420M570 0v420M665 0v420"/>
-            </g>
-            <!-- Амур -->
-            <path class="citymap__river citymap__river--wide" d="M40 400 C 140 300, 150 200, 240 120 C 300 50, 380 30, 470 20"/>
-            <!-- улицы: сетка города вдоль реки -->
-            <path class="citymap__road" d="M250 120 L 620 260 M230 170 L 600 310 M210 220 L 580 360"/>
-            <path class="citymap__road citymap__road--dim" d="M320 90 L 250 330 M420 130 L 350 370 M520 170 L 450 400"/>
-            <!-- пинг-линия -->
-            <path class="pingline" d="M382 172 L 486 300"/>
-            <text class="citymap__ping" x="452" y="230">0.5 ms</text>
-          </g>
-          <a class="mk" href="https://yandex.ru/maps/-/CTrN5YM5" target="_blank" rel="noopener">
-            <circle class="mk__pulse" cx="382" cy="172" r="9"/>
-            <circle class="mk__dot" cx="382" cy="172" r="6"/>
-            <text class="mk__label" x="398" y="168">КАЛИНИНА</text>
-          </a>
-          <a class="mk" href="https://yandex.ru/maps/-/CTrN5Vj0" target="_blank" rel="noopener">
-            <circle class="mk__pulse" cx="486" cy="300" r="9"/>
-            <circle class="mk__dot" cx="486" cy="300" r="6"/>
-            <text class="mk__label" x="502" y="324">КРАСНОРЕЧЕНСКАЯ</text>
-          </a>
-        </svg>
+        <div id="netmap" class="netmap" aria-label="Карта клубов IZI"></div>
       </div>
 
       <div class="doors" data-city="msk" data-reveal>
         <article class="door">
-          <div class="door__plate">БЕЛОРУССКАЯ</div>
           <div class="door__no">CLUB · 01</div>
-          <div class="door__city">Москва</div>
+          <div class="door__plate">БЕЛОРУССКАЯ</div>
+          <div class="door__addr">Большой Кондратьевский пер., 12с1</div>
           <div class="door__map"><iframe loading="lazy" title="IZI Белорусская на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=194485804648&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrNyO5Z" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
@@ -402,9 +328,9 @@
           </div>
         </article>
         <article class="door">
-          <div class="door__plate">КУРСКАЯ</div>
           <div class="door__no">CLUB · 02</div>
-          <div class="door__city">Москва</div>
+          <div class="door__plate">КУРСКАЯ</div>
+          <div class="door__addr">ул. Земляной Вал, 36с2</div>
           <div class="door__map"><iframe loading="lazy" title="IZI Курская на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=18514435161&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrNyDyw" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
@@ -412,9 +338,9 @@
           </div>
         </article>
         <article class="door">
-          <div class="door__plate">ПРОФСОЮЗНАЯ</div>
           <div class="door__no">CLUB · 03</div>
-          <div class="door__city">Москва</div>
+          <div class="door__plate">ПРОФСОЮЗНАЯ</div>
+          <div class="door__addr">Нахимовский просп., 38</div>
           <div class="door__map"><iframe loading="lazy" title="IZI Профсоюзная на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=65035936125&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrNyTJE" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
@@ -424,9 +350,9 @@
       </div>
       <div class="doors" data-city="khv" hidden>
         <article class="door">
-          <div class="door__plate">КАЛИНИНА</div>
           <div class="door__no">CLUB · 04</div>
-          <div class="door__city">Хабаровск</div>
+          <div class="door__plate">КАЛИНИНА</div>
+          <div class="door__addr">ул. Калинина, 80</div>
           <div class="door__map"><iframe loading="lazy" title="IZI Калинина на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=132456242715&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrN5YM5" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
@@ -434,9 +360,9 @@
           </div>
         </article>
         <article class="door">
-          <div class="door__plate">КРАСНОРЕЧЕНСКАЯ</div>
           <div class="door__no">CLUB · 05</div>
-          <div class="door__city">Хабаровск</div>
+          <div class="door__plate">КРАСНОРЕЧЕНСКАЯ</div>
+          <div class="door__addr">ул. Краснореченская, 94</div>
           <div class="door__map"><iframe loading="lazy" title="IZI Краснореченская на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=208566464095&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrN5Vj0" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
@@ -490,6 +416,7 @@
   <script src="../assets/vendor/gsap.min.js"></script>
   <script src="../assets/vendor/ScrollTrigger.min.js"></script>
   <script src="../assets/js/main.js"></script>
+  <script src="assets/vendor/leaflet/leaflet.js"></script>
   <script src="assets/js/next.js"></script>
 </body>
 </html>
