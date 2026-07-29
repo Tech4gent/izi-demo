@@ -1,0 +1,246 @@
+/* ============================================================
+   IZI - корректировочная версия (next): правки поверх style.css
+   1) энерголинии в «Причине прийти», 2) перф-карточки в стиле сайта,
+   3) стилизованная карта городов, 4) мини-карты в карточках клубов,
+   5) выбор города в хедере
+   ============================================================ */
+
+/* -------- Выбор города в хедере -------- */
+.city-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  border: 1px solid rgba(244, 245, 247, 0.3);
+  border-radius: 999px;
+  padding: 10px 16px;
+  transition: border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.city-pick svg { width: 13px; height: 13px; color: var(--yellow); }
+.city-pick:hover {
+  border-color: var(--yellow);
+  box-shadow: 0 0 22px rgba(255, 230, 0, 0.18);
+}
+@media (max-width: 640px) {
+  .city-pick { padding: 9px 12px; font-size: 11px; }
+  /* в хедере теперь три элемента - ужимаемся */
+  .next .header { gap: 10px; }
+  .next .header__brandtext { display: none; }
+  .next .header__cta { padding: 10px 13px; font-size: 11px; }
+}
+
+/* -------- Энерголинии: «Причина прийти» -------- */
+@keyframes energy-flow {
+  from { background-position: 0% 0; }
+  to { background-position: -200% 0; }
+}
+.energyline {
+  height: 2px;
+  margin-top: 28px;
+  border-radius: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%, var(--blue) 22%, var(--yellow) 50%, var(--blue) 78%, transparent 100%);
+  background-size: 200% 100%;
+  animation: energy-flow 3.4s linear infinite;
+  box-shadow: 0 0 18px rgba(43, 89, 255, 0.5);
+}
+
+.next .fact { position: relative; overflow: hidden; }
+.next .fact::before { /* линия-разряд по верхней кромке */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%, var(--blue) 25%, var(--yellow) 50%, var(--blue) 75%, transparent 100%);
+  background-size: 220% 100%;
+  animation: energy-flow 3s linear infinite;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.next .fact.is-lit::before { transform: scaleX(1); }
+@keyframes fact-charge {
+  0% { box-shadow: 0 0 0 rgba(43, 89, 255, 0); }
+  30% {
+    box-shadow: 0 0 46px rgba(43, 89, 255, 0.45), inset 0 0 30px rgba(43, 89, 255, 0.12);
+    border-color: rgba(43, 89, 255, 0.85);
+  }
+  100% { box-shadow: 0 0 0 rgba(43, 89, 255, 0); }
+}
+.next .fact.is-lit { animation: fact-charge 1.3s ease-out both; }
+
+/* -------- Перф-карточки: общий стиль сайта вместо жёлтых сот -------- */
+.next .perfcard {
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: none;
+  transition: border-color 0.3s ease;
+}
+.next .perfcard:hover { border-color: rgba(43, 89, 255, 0.55); }
+.next .perfcard::after { /* энерголиния по нижней кромке - перекличка с фактами */
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%, var(--blue) 25%, var(--yellow) 50%, var(--blue) 75%, transparent 100%);
+  background-size: 220% 100%;
+  animation: energy-flow 3.4s linear infinite;
+  opacity: 0.85;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.next .perfcard::before { /* синяя радарная сетка с затуханием - в духе интерьеров */
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(43, 89, 255, 0.13) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(43, 89, 255, 0.13) 1px, transparent 1px);
+  background-size: 34px 34px;
+  -webkit-mask-image: radial-gradient(ellipse at 85% 100%, #000 15%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 85% 100%, #000 15%, transparent 72%);
+}
+.perfcard__corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+.perfcard__corner--tl { top: 12px; left: 12px; border-top: 2px solid var(--yellow); border-left: 2px solid var(--yellow); }
+.perfcard__corner--br { bottom: 12px; right: 12px; border-bottom: 2px solid var(--yellow); border-right: 2px solid var(--yellow); }
+.perfcard__tag {
+  font-family: var(--font-tech);
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  color: var(--blue);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.next .perfcard h3 {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: clamp(14px, 1.3vw, 17px);
+  letter-spacing: 0.07em;
+  line-height: 1.5;
+  color: var(--white);
+  max-width: 40ch;
+  margin: 0 0 22px;
+}
+.next .perfcard__value {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: normal;
+  font-size: clamp(44px, 5vw, 72px);
+  color: var(--white);
+  text-shadow: none;
+  margin-bottom: 18px;
+}
+.next .perfcard__value em {
+  font-family: var(--font-tech);
+  font-style: normal;
+  font-size: 0.42em;
+  color: var(--yellow);
+}
+.next .perfcard p { margin: 0; max-width: 52ch; color: var(--mut); }
+
+/* -------- Стилизованная карта сети -------- */
+.mapbox {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: clamp(16px, 2.4vw, 30px);
+  margin-bottom: 22px;
+  overflow: hidden;
+}
+.mapbox__hud {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--mut);
+  margin-bottom: 8px;
+}
+.mapbox__hud span:last-child { color: var(--yellow); }
+.citymap { width: 100%; height: auto; display: block; }
+.citymap[hidden] { display: none; }
+.citymap__grid path { stroke: rgba(244, 245, 247, 0.05); stroke-width: 1; }
+.citymap__road { fill: none; stroke: rgba(43, 89, 255, 0.5); stroke-width: 1.6; }
+.citymap__road--dim { stroke: rgba(43, 89, 255, 0.22); stroke-width: 1.2; }
+.citymap__river { fill: none; stroke: rgba(143, 176, 255, 0.28); stroke-width: 10; stroke-linecap: round; }
+.citymap__river--wide { stroke-width: 26; }
+.pingline {
+  fill: none;
+  stroke: var(--yellow);
+  stroke-width: 1.4;
+  stroke-dasharray: 5 11;
+  opacity: 0.75;
+  animation: ping-run 1.5s linear infinite;
+}
+@keyframes ping-run { to { stroke-dashoffset: -32; } }
+.citymap__ping {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  fill: var(--yellow);
+  opacity: 0.85;
+}
+.mk { cursor: pointer; }
+.mk__dot {
+  fill: var(--yellow);
+  stroke: #050507;
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.25s ease;
+}
+.mk:hover .mk__dot { transform: scale(1.45); }
+.mk__pulse {
+  fill: none;
+  stroke: var(--yellow);
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mk-pulse 2.3s ease-out infinite;
+}
+@keyframes mk-pulse {
+  0% { transform: scale(0.5); opacity: 0.9; }
+  75% { transform: scale(2.8); opacity: 0; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+.mk__label {
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  fill: var(--white);
+  paint-order: stroke;
+  stroke: rgba(5, 5, 7, 0.85);
+  stroke-width: 4;
+}
+.mk:hover .mk__label { fill: var(--yellow); }
+
+/* -------- Мини-карты в карточках клубов -------- */
+.door__map {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(10, 10, 12, 0.15);
+  aspect-ratio: 16 / 9;
+  margin: 16px 0 2px;
+  background: #e8eaed;
+}
+.door__map iframe { width: 100%; height: 100%; border: 0; display: block; }

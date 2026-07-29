@@ -4,17 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>IZI - компьютерный клуб (3D-версия). NO GAME - NO LIFE</title>
-  <meta name="description" content="Сеть компьютерных клубов IZI: 5 клубов в Москве и Хабаровске. RTX 5080, мониторы до 600 Гц, пинг 0.5 ms, честные цены, 24/7.">
+  <title>IZI - компьютерный клуб (версия с правками). NO GAME - NO LIFE</title>
+  <meta name="description" content="Сеть компьютерных клубов IZI: Москва и Хабаровск. RTX 5080, мониторы до 600 Гц, пинг 0.5 ms, честные цены, 24/7.">
   <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/overrides.css">
+  <link rel="stylesheet" href="assets/css/next.css">
   <link rel="icon" href="../assets/img/logo-white.png" type="image/png">
 </head>
-<body>
-
-  <!-- 3D-СЦЕНА -->
-  <canvas id="webgl"></canvas>
-  <div class="vignette"></div>
+<body class="next">
 
   <!-- ПРЕЛОАДЕР: экран загрузки в стиле игрового меню -->
   <div class="preloader" id="preloader" aria-hidden="true">
@@ -43,6 +39,10 @@
       <a href="#prices" data-nav>Цены</a>
       <a href="#adresa" data-nav>Адреса</a>
     </nav>
+    <button class="city-pick" id="cityPick" type="button" title="Сменить город">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></svg>
+      <span id="cityPickName">МОСКВА</span>
+    </button>
     <a class="btn btn--accent header__cta" href="#adresa" data-nav data-magnetic><span>ВЫБРАТЬ КЛУБ</span></a>
   </header>
 
@@ -65,8 +65,8 @@
         </div>
       </div>
       <div class="hero__stats" data-reveal>
-        <div class="hero__stat"><b>5</b><span>клубов</span></div>
-        <div class="hero__stat"><b>2</b><span>города</span></div>
+        <div class="hero__stat"><b id="statClubs">3</b><span>клуба в твоём городе</span></div>
+        <div class="hero__stat"><b id="statCity">МОСКВА</b><span>твой город</span></div>
         <div class="hero__stat"><b>600 Гц</b><span>мониторы</span></div>
         <div class="hero__stat"><b>RTX 5080</b><span>в SUPER DUO</span></div>
         <div class="hero__stat"><b>24/7</b><span>без перерывов</span></div>
@@ -81,32 +81,33 @@
       </div>
     </div>
 
-    <!-- 2. ПРИЧИНА ПРИЙТИ: факты -->
+    <!-- 2. ПРИЧИНА ПРИЙТИ: факты с энерголиниями -->
     <section class="section club" id="club">
       <div class="section__head">
         <div class="label" data-reveal>// ПОЧЕМУ IZI</div>
         <h2 class="h2" data-split>ПРИЧИНА ПРИЙТИ -<br>ЖЕЛЕЗО И АТМОСФЕРА</h2>
+        <div class="energyline" data-reveal aria-hidden="true"></div>
       </div>
       <div class="facts">
-        <article class="fact" data-reveal data-tilt>
+        <article class="fact" data-tilt>
           <div class="fact__num">ФАКТ 01</div>
           <div class="fact__value"><span data-count="600">0</span> <em>Гц</em></div>
           <div class="fact__name">ТОПОВЫЙ МОНИТОР СЕТИ</div>
           <p>Киберспортивные 24.5" панели от 280 до 600 Гц. Плавность, которую видно в первом же раунде.</p>
         </article>
-        <article class="fact" data-reveal data-tilt>
+        <article class="fact" data-tilt>
           <div class="fact__num">ФАКТ 02</div>
           <div class="fact__value">RTX <span data-count="5080">0</span></div>
           <div class="fact__name">ФЛАГМАНСКОЕ ЖЕЛЕЗО</div>
           <p>Зона SUPER DUO собрана на RTX 5080. Любая игра на максималках - без просадок и оправданий.</p>
         </article>
-        <article class="fact" data-reveal data-tilt>
+        <article class="fact" data-tilt>
           <div class="fact__num">ФАКТ 03</div>
           <div class="fact__value">24<em>/</em>7</div>
           <div class="fact__name">ВСЕГДА ОТКРЫТО</div>
           <p>Утренние тарифы, вечерние пакеты и ночь до 10 часов подряд. График не ограничивает катку.</p>
         </article>
-        <article class="fact" data-reveal data-tilt>
+        <article class="fact" data-tilt>
           <div class="fact__num">ФАКТ 04</div>
           <div class="fact__value"><span data-count="5">0</span> <em>клубов</em></div>
           <div class="fact__name">МОСКВА И ХАБАРОВСК</div>
@@ -126,17 +127,23 @@
       </div>
     </section>
 
-    <!-- 2.5. ПИНГ И FPS: карточки в стиле референса 777 -->
+    <!-- 2.5. ПИНГ И FPS: в общем стиле сайта -->
     <section class="section perf" id="perf">
       <div class="perfcards">
         <article class="perfcard" data-reveal data-tilt>
+          <i class="perfcard__corner perfcard__corner--tl" aria-hidden="true"></i>
+          <i class="perfcard__corner perfcard__corner--br" aria-hidden="true"></i>
+          <div class="perfcard__tag">// ПИНГ</div>
           <h3>МИНИМАЛЬНО НИЗКИЙ ПИНГ ДО СЕРВЕРОВ РФ, КОТОРЫЙ НЕЗАМЕТЕН ВО ВРЕМЯ ИГРЫ</h3>
-          <div class="perfcard__value">0.5<em>MS</em></div>
+          <div class="perfcard__value">0.5 <em>MS</em></div>
           <p>Без лагов, зависаний и вылетов. Такой пинг можно увидеть на киберспортивных турнирах.</p>
         </article>
         <article class="perfcard" data-reveal data-tilt>
+          <i class="perfcard__corner perfcard__corner--tl" aria-hidden="true"></i>
+          <i class="perfcard__corner perfcard__corner--br" aria-hidden="true"></i>
+          <div class="perfcard__tag">// FPS</div>
           <h3>ПРЕДЕЛЬНО ВЫСОКИЙ FPS НА КАЖДОЙ МАШИНЕ</h3>
-          <div class="perfcard__value">ДО 600<em>FPS</em></div>
+          <div class="perfcard__value">ДО 600 <em>FPS</em></div>
           <p>Плавная графика, без разрывов и сдвигов. Твоё конкурентное преимущество в онлайн-играх с противником.</p>
         </article>
       </div>
@@ -294,7 +301,7 @@
       </div>
     </section>
 
-    <!-- 6. АДРЕСА -->
+    <!-- 6. АДРЕСА: киберкарта + карточки с мини-картами -->
     <section class="section adresa" id="adresa">
       <div class="section__head">
         <div class="label" data-reveal>// АДРЕСА</div>
@@ -304,11 +311,91 @@
         <button class="citytab is-active" data-citytab="msk" type="button">МОСКВА</button>
         <button class="citytab" data-citytab="khv" type="button">ХАБАРОВСК</button>
       </div>
+
+      <!-- Стилизованная карта сети -->
+      <div class="mapbox" data-reveal>
+        <div class="mapbox__hud">
+          <span id="mapHudCity">MSK // 55.75 N · 37.61 E</span>
+          <span>СЕТЬ IZI · ОНЛАЙН</span>
+        </div>
+
+        <!-- МОСКВА -->
+        <svg class="citymap" data-map="msk" viewBox="0 0 760 420" role="img" aria-label="Карта клубов IZI в Москве">
+          <defs>
+            <radialGradient id="mapfade" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+            </radialGradient>
+            <mask id="mapmask"><rect width="760" height="420" fill="url(#mapfade)"/></mask>
+          </defs>
+          <g mask="url(#mapmask)">
+            <g class="citymap__grid">
+              <path d="M0 70h760M0 140h760M0 210h760M0 280h760M0 350h760M95 0v420M190 0v420M285 0v420M380 0v420M475 0v420M570 0v420M665 0v420"/>
+            </g>
+            <!-- Москва-река -->
+            <path class="citymap__river" d="M120 40 C 240 130, 260 230, 380 250 C 480 265, 520 330, 660 390"/>
+            <!-- кольца: Садовое, ТТК, МКАД -->
+            <ellipse class="citymap__road" cx="380" cy="210" rx="86" ry="64"/>
+            <ellipse class="citymap__road" cx="380" cy="210" rx="150" ry="112"/>
+            <ellipse class="citymap__road citymap__road--dim" cx="380" cy="210" rx="292" ry="188"/>
+            <!-- проспекты -->
+            <path class="citymap__road citymap__road--dim" d="M380 210 L 250 30 M380 210 L 560 44 M380 210 L 640 300 M380 210 L 210 386 M380 210 L 96 210"/>
+            <!-- пинг-линии между клубами -->
+            <path class="pingline" d="M332 128 L 468 196 L 300 306 Z"/>
+            <text class="citymap__ping" x="416" y="150">0.5 ms</text>
+          </g>
+          <!-- клубы -->
+          <a class="mk" href="https://yandex.ru/maps/-/CTrNyO5Z" target="_blank" rel="noopener">
+            <circle class="mk__pulse" cx="332" cy="128" r="9"/>
+            <circle class="mk__dot" cx="332" cy="128" r="6"/>
+            <text class="mk__label" x="348" y="124">БЕЛОРУССКАЯ</text>
+          </a>
+          <a class="mk" href="https://yandex.ru/maps/-/CTrNyDyw" target="_blank" rel="noopener">
+            <circle class="mk__pulse" cx="468" cy="196" r="9"/>
+            <circle class="mk__dot" cx="468" cy="196" r="6"/>
+            <text class="mk__label" x="484" y="192">КУРСКАЯ</text>
+          </a>
+          <a class="mk" href="https://yandex.ru/maps/-/CTrNyTJE" target="_blank" rel="noopener">
+            <circle class="mk__pulse" cx="300" cy="306" r="9"/>
+            <circle class="mk__dot" cx="300" cy="306" r="6"/>
+            <text class="mk__label" x="316" y="330">ПРОФСОЮЗНАЯ</text>
+          </a>
+        </svg>
+
+        <!-- ХАБАРОВСК -->
+        <svg class="citymap" data-map="khv" viewBox="0 0 760 420" role="img" aria-label="Карта клубов IZI в Хабаровске" hidden>
+          <g mask="url(#mapmask)">
+            <g class="citymap__grid">
+              <path d="M0 70h760M0 140h760M0 210h760M0 280h760M0 350h760M95 0v420M190 0v420M285 0v420M380 0v420M475 0v420M570 0v420M665 0v420"/>
+            </g>
+            <!-- Амур -->
+            <path class="citymap__river citymap__river--wide" d="M40 400 C 140 300, 150 200, 240 120 C 300 50, 380 30, 470 20"/>
+            <!-- улицы: сетка города вдоль реки -->
+            <path class="citymap__road" d="M250 120 L 620 260 M230 170 L 600 310 M210 220 L 580 360"/>
+            <path class="citymap__road citymap__road--dim" d="M320 90 L 250 330 M420 130 L 350 370 M520 170 L 450 400"/>
+            <!-- пинг-линия -->
+            <path class="pingline" d="M382 172 L 486 300"/>
+            <text class="citymap__ping" x="452" y="230">0.5 ms</text>
+          </g>
+          <a class="mk" href="https://yandex.ru/maps/-/CTrN5YM5" target="_blank" rel="noopener">
+            <circle class="mk__pulse" cx="382" cy="172" r="9"/>
+            <circle class="mk__dot" cx="382" cy="172" r="6"/>
+            <text class="mk__label" x="398" y="168">КАЛИНИНА</text>
+          </a>
+          <a class="mk" href="https://yandex.ru/maps/-/CTrN5Vj0" target="_blank" rel="noopener">
+            <circle class="mk__pulse" cx="486" cy="300" r="9"/>
+            <circle class="mk__dot" cx="486" cy="300" r="6"/>
+            <text class="mk__label" x="502" y="324">КРАСНОРЕЧЕНСКАЯ</text>
+          </a>
+        </svg>
+      </div>
+
       <div class="doors" data-city="msk" data-reveal>
         <article class="door">
           <div class="door__plate">БЕЛОРУССКАЯ</div>
           <div class="door__no">CLUB · 01</div>
           <div class="door__city">Москва</div>
+          <div class="door__map"><iframe loading="lazy" title="IZI Белорусская на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=194485804648&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrNyO5Z" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
             <a class="btn btn--darkghost" href="https://vk.ru/izimsk" target="_blank" rel="noopener"><span>VK</span></a>
@@ -318,6 +405,7 @@
           <div class="door__plate">КУРСКАЯ</div>
           <div class="door__no">CLUB · 02</div>
           <div class="door__city">Москва</div>
+          <div class="door__map"><iframe loading="lazy" title="IZI Курская на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=18514435161&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrNyDyw" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
             <a class="btn btn--darkghost" href="https://vk.ru/izimsk" target="_blank" rel="noopener"><span>VK</span></a>
@@ -327,6 +415,7 @@
           <div class="door__plate">ПРОФСОЮЗНАЯ</div>
           <div class="door__no">CLUB · 03</div>
           <div class="door__city">Москва</div>
+          <div class="door__map"><iframe loading="lazy" title="IZI Профсоюзная на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=65035936125&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrNyTJE" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
             <a class="btn btn--darkghost" href="https://vk.ru/izimsk" target="_blank" rel="noopener"><span>VK</span></a>
@@ -338,6 +427,7 @@
           <div class="door__plate">КАЛИНИНА</div>
           <div class="door__no">CLUB · 04</div>
           <div class="door__city">Хабаровск</div>
+          <div class="door__map"><iframe loading="lazy" title="IZI Калинина на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=132456242715&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrN5YM5" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
             <a class="btn btn--darkghost" href="https://vk.ru/izicyber" target="_blank" rel="noopener"><span>VK</span></a>
@@ -347,6 +437,7 @@
           <div class="door__plate">КРАСНОРЕЧЕНСКАЯ</div>
           <div class="door__no">CLUB · 05</div>
           <div class="door__city">Хабаровск</div>
+          <div class="door__map"><iframe loading="lazy" title="IZI Краснореченская на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=208566464095&z=16"></iframe></div>
           <div class="door__actions">
             <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrN5Vj0" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
             <a class="btn btn--darkghost" href="https://vk.ru/izicyber" target="_blank" rel="noopener"><span>VK</span></a>
@@ -393,19 +484,12 @@
     </div>
   </footer>
 
+  <a class="variant-switch" href="../">БАЗОВАЯ ВЕРСИЯ</a>
+
   <script src="../assets/vendor/lenis.min.js"></script>
   <script src="../assets/vendor/gsap.min.js"></script>
   <script src="../assets/vendor/ScrollTrigger.min.js"></script>
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "./assets/vendor/three.module.min.js",
-        "three/addons/": "./assets/vendor/three-addons/"
-      }
-    }
-  </script>
-  <script type="module" src="assets/js/scene.js"></script>
   <script src="../assets/js/main.js"></script>
-  <a class="variant-switch" href="../">ФОТО-ВЕРСИЯ</a>
+  <script src="assets/js/next.js"></script>
 </body>
 </html>
