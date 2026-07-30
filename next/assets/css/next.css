@@ -312,7 +312,10 @@
   grid-template-columns: none;
   gap: 16px;
   overflow-x: auto;
-  padding-bottom: 6px;
+  /* запас по краям: горизонтальная прокрутка режет всё, что вылезает,
+     а карточка на наведении приподнимается и светит тенью */
+  padding: 14px 4px 16px;
+  margin: -14px -4px 0;
   scroll-snap-type: x proximity;
 }
 .next .doors[hidden] { display: none; }

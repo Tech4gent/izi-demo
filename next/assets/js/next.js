@@ -82,8 +82,9 @@ CLUBS.forEach((club) => {
     `</div>`,
     { className: 'izi-pop', closeButton: true }
   );
-  marker.on('mouseover', () => setActive(club.id));
-  marker.on('click', () => setActive(club.id));
+  marker.on('mouseover', () => { cancelClose(); setActive(club.id); });
+  marker.on('mouseout', () => { if (finePointerNext) scheduleClose(); });
+  marker.on('click', () => { cancelClose(); setActive(club.id); });
   markers[club.id] = marker;
   marker.addTo(cityLayers[club.city]);
 });
@@ -119,12 +120,30 @@ function clearActive() {
   document.querySelectorAll('.club[data-club]').forEach((card) => card.classList.remove('is-active'));
 }
 
+/* Уводим мышь - окошко гаснет. Пауза перед закрытием, чтобы можно было
+   перевести курсор на само окошко и нажать «Забронировать». */
+let closeTimer = null;
+function scheduleClose() {
+  clearTimeout(closeTimer);
+  closeTimer = setTimeout(() => { netmap.closePopup(); }, 260);
+}
+function cancelClose() { clearTimeout(closeTimer); }
+
+netmap.on('popupopen', (e) => {
+  if (!finePointerNext) return;
+  const el = e.popup.getElement();
+  if (!el) return;
+  el.addEventListener('pointerenter', cancelClose);
+  el.addEventListener('pointerleave', scheduleClose);
+});
+
 document.querySelectorAll('.club[data-club]').forEach((card) => {
   const id = card.dataset.club;
   if (finePointerNext) {
-    card.addEventListener('pointerenter', () => setActive(id));
+    card.addEventListener('pointerenter', () => { cancelClose(); setActive(id); });
+    card.addEventListener('pointerleave', scheduleClose);
   }
-  card.addEventListener('focusin', () => setActive(id));
+  card.addEventListener('focusin', () => { cancelClose(); setActive(id); });
   card.addEventListener('click', (e) => {
     if (e.target.closest('a')) return; // клик по кнопке карточки - не перехватываем
     setActive(id);
