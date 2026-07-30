@@ -66,7 +66,6 @@
         </div>
       </div>
       <div class="hero__stats" data-reveal>
-        <div class="hero__stat"><b id="statCity">МОСКВА</b><span>твой город</span></div>
         <div class="hero__stat"><b>600 Гц</b><span>мониторы</span></div>
         <div class="hero__stat"><b>RTX 5080</b><span>в SUPER DUO</span></div>
         <div class="hero__stat"><b>24/7</b><span>без перерывов</span></div>
@@ -156,13 +155,13 @@
       </div>
       <div class="zonelist">
         <article class="zone" data-reveal>
-          <div class="zone__media"><img src="../assets/img/hall-pcs.jpg" alt="Зона COMFORT"></div>
+          <div class="zone__media"><img src="../assets/img/duo-room.jpg" alt="Зона SUPER DUO"></div>
           <div class="zone__body">
-            <div class="zone__plate">COMFORT</div>
+            <div class="zone__plate">SUPER DUO</div>
             <div class="zone__specs">
-              <span>RTX 3070</span><span>280 Гц · 24.5"</span><span>основной зал</span>
+              <span class="zone__price">от 580 ₽/час</span><span>RTX 5080</span><span>600 Гц · 24.5"</span><span>комната на двоих</span>
             </div>
-            <p>Общий зал без тесноты: широкие столы, перегородки, свой свет. База для катки с друзьями.</p>
+            <p>Личная комната на двоих и максимум железа: флагманская карта, 600 Гц и белая периферия Logitech G PRO.</p>
           </div>
         </article>
         <article class="zone zone--rev" data-reveal>
@@ -170,19 +169,19 @@
           <div class="zone__body">
             <div class="zone__plate">VIP</div>
             <div class="zone__specs">
-              <span>RTX 4070 SUPER</span><span>400 Гц · 24.5"</span><span>отдельные комнаты</span>
+              <span class="zone__price">от 290 ₽/час</span><span>RTX 4070 SUPER</span><span>400 Гц · 24.5"</span><span>отдельные комнаты</span>
             </div>
             <p>Комнаты на 5 мест за белыми дверями. Тише, темнее, быстрее - формат для тех, кто пришёл побеждать.</p>
           </div>
         </article>
         <article class="zone" data-reveal>
-          <div class="zone__media"><img src="../assets/img/duo-room.jpg" alt="Зона SUPER DUO"></div>
+          <div class="zone__media"><img src="../assets/img/hall-pcs.jpg" alt="Зона COMFORT"></div>
           <div class="zone__body">
-            <div class="zone__plate">SUPER DUO</div>
+            <div class="zone__plate">COMFORT</div>
             <div class="zone__specs">
-              <span>RTX 5080</span><span>600 Гц · 24.5"</span><span>комната на двоих</span>
+              <span class="zone__price">от 180 ₽/час</span><span>RTX 3070</span><span>280 Гц · 24.5"</span><span>основной зал</span>
             </div>
-            <p>Личная комната на двоих и максимум железа: флагманская карта, 600 Гц и белая периферия Logitech G PRO.</p>
+            <p>Общий зал без тесноты: широкие столы, перегородки, свой свет. База для катки с друзьями.</p>
           </div>
         </article>
       </div>
@@ -315,83 +314,95 @@
         <div id="netmap" class="netmap" aria-label="Карта клубов IZI"></div>
       </div>
 
+      <div class="doors__hint" data-reveal>Наведи или нажми на клуб - подсветим его на карте</div>
+
       <div class="doors" data-city="msk" data-reveal>
-        <article class="door">
-          <div class="door__meta">
-            <div class="door__no">CLUB · 01</div>
-            <div class="door__addr">Большой Кондратьевский пер., 12с1</div>
-          </div>
-          <div class="door__plate">БЕЛОРУССКАЯ</div>
-          <div class="door__map"><iframe loading="lazy" title="IZI Белорусская на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=194485804648&z=16"></iframe></div>
-          <div class="door__actions">
-            <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrNyO5Z" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
-            <a class="btn btn--darkghost" href="https://vk.ru/izimsk" target="_blank" rel="noopener"><span>VK</span></a>
-          </div>
-        </article>
-        <article class="door">
-          <div class="door__meta">
-            <div class="door__no">CLUB · 02</div>
-            <div class="door__addr">ул. Земляной Вал, 36с2</div>
-          </div>
-          <div class="door__plate">КУРСКАЯ</div>
-          <div class="door__map"><iframe loading="lazy" title="IZI Курская на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=18514435161&z=16"></iframe></div>
-          <div class="door__actions">
-            <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrNyDyw" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
-            <a class="btn btn--darkghost" href="https://vk.ru/izimsk" target="_blank" rel="noopener"><span>VK</span></a>
+        <article class="club" data-club="bel" tabindex="0">
+          <i class="club__corner club__corner--tl" aria-hidden="true"></i>
+          <i class="club__corner club__corner--br" aria-hidden="true"></i>
+          <div class="club__no">CLUB · 01</div>
+          <h3 class="club__name">БЕЛОРУССКАЯ</h3>
+          <div class="club__meta"><span class="club__dot" style="--metro:#2dbe2c">М</span>м. Белорусская</div>
+          <div class="club__addr">Большой Кондратьевский пер., 12с1</div>
+          <div class="club__zones"><span>COMFORT</span><span>VIP</span><span>SUPER DUO</span></div>
+          <div class="club__foot">
+            <a class="club__book" href="https://vk.ru/izimsk" target="_blank" rel="noopener">ЗАБРОНИРОВАТЬ <b>&rarr;</b></a>
+            <a class="club__route" href="https://yandex.ru/maps/-/CTrNyO5Z" target="_blank" rel="noopener">МАРШРУТ</a>
           </div>
         </article>
-        <article class="door">
-          <div class="door__meta">
-            <div class="door__no">CLUB · 03</div>
-            <div class="door__addr">Нахимовский просп., 38</div>
+        <article class="club" data-club="kur" tabindex="0">
+          <i class="club__corner club__corner--tl" aria-hidden="true"></i>
+          <i class="club__corner club__corner--br" aria-hidden="true"></i>
+          <div class="club__no">CLUB · 02</div>
+          <h3 class="club__name">КУРСКАЯ</h3>
+          <div class="club__meta"><span class="club__dot" style="--metro:#0078be">М</span>м. Курская</div>
+          <div class="club__addr">ул. Земляной Вал, 36с2</div>
+          <div class="club__zones"><span>COMFORT</span><span>VIP</span><span>SUPER DUO</span></div>
+          <div class="club__foot">
+            <a class="club__book" href="https://vk.ru/izimsk" target="_blank" rel="noopener">ЗАБРОНИРОВАТЬ <b>&rarr;</b></a>
+            <a class="club__route" href="https://yandex.ru/maps/-/CTrNyDyw" target="_blank" rel="noopener">МАРШРУТ</a>
           </div>
-          <div class="door__plate">ПРОФСОЮЗНАЯ</div>
-          <div class="door__map"><iframe loading="lazy" title="IZI Профсоюзная на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=65035936125&z=16"></iframe></div>
-          <div class="door__actions">
-            <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrNyTJE" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
-            <a class="btn btn--darkghost" href="https://vk.ru/izimsk" target="_blank" rel="noopener"><span>VK</span></a>
+        </article>
+        <article class="club" data-club="prof" tabindex="0">
+          <i class="club__corner club__corner--tl" aria-hidden="true"></i>
+          <i class="club__corner club__corner--br" aria-hidden="true"></i>
+          <div class="club__no">CLUB · 03</div>
+          <h3 class="club__name">ПРОФСОЮЗНАЯ</h3>
+          <div class="club__meta"><span class="club__dot" style="--metro:#f58220">М</span>м. Профсоюзная</div>
+          <div class="club__addr">Нахимовский просп., 38</div>
+          <div class="club__zones"><span>COMFORT</span><span>VIP</span><span>SUPER DUO</span></div>
+          <div class="club__foot">
+            <a class="club__book" href="https://vk.ru/izimsk" target="_blank" rel="noopener">ЗАБРОНИРОВАТЬ <b>&rarr;</b></a>
+            <a class="club__route" href="https://yandex.ru/maps/-/CTrNyTJE" target="_blank" rel="noopener">МАРШРУТ</a>
+          </div>
+        </article>
+        <article class="club" data-club="p1905" tabindex="0">
+          <i class="club__corner club__corner--tl" aria-hidden="true"></i>
+          <i class="club__corner club__corner--br" aria-hidden="true"></i>
+          <div class="club__no">CLUB · 04</div>
+          <h3 class="club__name">1905 ГОДА</h3>
+          <div class="club__meta"><span class="club__dot" style="--metro:#943d90">М</span>м. Улица 1905 года</div>
+          <div class="club__addr">ул. 1905 года, 9с1</div>
+          <div class="club__zones"><span>COMFORT</span><span>VIP</span><span>SUPER DUO</span></div>
+          <div class="club__foot">
+            <a class="club__book" href="https://vk.ru/izimsk" target="_blank" rel="noopener">ЗАБРОНИРОВАТЬ <b>&rarr;</b></a>
+            <a class="club__route" href="https://yandex.ru/maps/?text=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%201905%20%D0%B3%D0%BE%D0%B4%D0%B0%2C%209%D1%811" target="_blank" rel="noopener">МАРШРУТ</a>
           </div>
         </article>
       </div>
+
       <div class="doors" data-city="khv" hidden>
-        <article class="door">
-          <div class="door__meta">
-            <div class="door__no">CLUB · 01</div>
-            <div class="door__addr">ул. Калинина, 80</div>
-          </div>
-          <div class="door__plate">КАЛИНИНА</div>
-          <div class="door__map"><iframe loading="lazy" title="IZI Калинина на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=132456242715&z=16"></iframe></div>
-          <div class="door__actions">
-            <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrN5YM5" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
-            <a class="btn btn--darkghost" href="https://vk.ru/izicyber" target="_blank" rel="noopener"><span>VK</span></a>
+        <article class="club" data-club="kal" tabindex="0">
+          <i class="club__corner club__corner--tl" aria-hidden="true"></i>
+          <i class="club__corner club__corner--br" aria-hidden="true"></i>
+          <div class="club__no">CLUB · 01</div>
+          <h3 class="club__name">КАЛИНИНА</h3>
+          <div class="club__meta"><span class="club__dot club__dot--time" style="--metro:#ffe600">24</span>работаем круглосуточно</div>
+          <div class="club__addr">ул. Калинина, 80</div>
+          <div class="club__zones"><span>COMFORT</span><span>VIP</span><span>SUPER DUO</span></div>
+          <div class="club__foot">
+            <a class="club__book" href="https://vk.ru/izicyber" target="_blank" rel="noopener">ЗАБРОНИРОВАТЬ <b>&rarr;</b></a>
+            <a class="club__route" href="https://yandex.ru/maps/-/CTrN5YM5" target="_blank" rel="noopener">МАРШРУТ</a>
           </div>
         </article>
-        <article class="door">
-          <div class="door__meta">
-            <div class="door__no">CLUB · 02</div>
-            <div class="door__addr">ул. Краснореченская, 94</div>
-          </div>
-          <div class="door__plate">КРАСНОРЕЧЕНСКАЯ</div>
-          <div class="door__map"><iframe loading="lazy" title="IZI Краснореченская на карте" src="https://yandex.ru/map-widget/v1/?ol=biz&oid=208566464095&z=16"></iframe></div>
-          <div class="door__actions">
-            <a class="btn btn--dark" href="https://yandex.ru/maps/-/CTrN5Vj0" target="_blank" rel="noopener"><span>НА КАРТЕ</span></a>
-            <a class="btn btn--darkghost" href="https://vk.ru/izicyber" target="_blank" rel="noopener"><span>VK</span></a>
+        <article class="club" data-club="kras" tabindex="0">
+          <i class="club__corner club__corner--tl" aria-hidden="true"></i>
+          <i class="club__corner club__corner--br" aria-hidden="true"></i>
+          <div class="club__no">CLUB · 02</div>
+          <h3 class="club__name">КРАСНОРЕЧЕНСКАЯ</h3>
+          <div class="club__meta"><span class="club__dot club__dot--time" style="--metro:#ffe600">24</span>работаем круглосуточно</div>
+          <div class="club__addr">ул. Краснореченская, 94</div>
+          <div class="club__zones"><span>COMFORT</span><span>VIP</span><span>SUPER DUO</span></div>
+          <div class="club__foot">
+            <a class="club__book" href="https://vk.ru/izicyber" target="_blank" rel="noopener">ЗАБРОНИРОВАТЬ <b>&rarr;</b></a>
+            <a class="club__route" href="https://yandex.ru/maps/-/CTrN5Vj0" target="_blank" rel="noopener">МАРШРУТ</a>
           </div>
         </article>
       </div>
+
       <div class="adresa__note" data-reveal>Открыто 24/7. Пиши в VK своего города - подскажем свободные места и поможем с бронью.</div>
     </section>
 
-    <!-- ФИНАЛ -->
-    <section class="final" id="final">
-      <div class="final__bg"><img src="../assets/img/final-anime.jpg" alt=""></div>
-      <div class="final__content">
-        <h2 class="final__title" data-split>ГОТОВ КАТАТЬ?</h2>
-        <div class="final__actions" data-reveal>
-          <a class="btn btn--accent btn--big" href="#adresa" data-nav data-magnetic><span>LET'S PLAY</span></a>
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- ФУТЕР -->

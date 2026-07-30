@@ -226,6 +226,16 @@
   75% { transform: scale(2.6); opacity: 0; }
   100% { transform: scale(2.6); opacity: 0; }
 }
+/* активный / притушенный маркер - связка с карточкой клуба */
+.lmk-wrap { transition: opacity 0.3s ease; }
+.lmk-wrap.is-dim { opacity: 0.3; }
+.lmk-wrap.is-active { z-index: 900 !important; }
+.lmk i { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease; }
+.lmk-wrap.is-active .lmk i {
+  transform: scale(1.5);
+  box-shadow: 0 0 28px rgba(255, 230, 0, 1);
+}
+.lmk-wrap.is-active .lmk b { color: var(--yellow); }
 .lmk b {
   position: absolute;
   left: 22px;
@@ -277,40 +287,146 @@
 .pop__route { border: 1px solid rgba(244, 245, 247, 0.35); color: var(--white) !important; }
 .pop__route:hover { border-color: var(--white); }
 
-/* -------- Карточки клубов: компактные -------- */
-.next .door { position: relative; min-height: 0; }
-.next .door__meta { /* CLUB · 0X и адрес под ним - правый верхний угол */
+
+/* -------- Цена в спеках зоны: порядок блоков от дорогой к дешёвой -------- */
+.next .zone__price {
+  border-color: rgba(255, 230, 0, 0.7) !important;
+  background: rgba(255, 230, 0, 0.1) !important;
+  color: var(--yellow);
+  font-weight: 700;
+}
+
+/* -------- Карточки клубов: в стиле сайта, связка с картой -------- */
+.doors__hint {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mut);
+  margin-bottom: 14px;
+}
+.next .doors {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(250px, 1fr);
+  grid-template-columns: none;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x proximity;
+}
+.next .doors[hidden] { display: none; }
+
+.next .club {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px 22px 18px;
+  cursor: pointer;
+  outline: none;
+  scroll-snap-align: start;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.next .club:hover,
+.next .club:focus-visible,
+.next .club.is-active {
+  border-color: rgba(43, 89, 255, 0.85);
+  transform: translateY(-4px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5), 0 0 30px rgba(43, 89, 255, 0.22);
+}
+.club__corner {
   position: absolute;
-  top: 26px;
-  right: 24px;
-  text-align: right;
-  max-width: 160px;
+  width: 17px;
+  height: 17px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
-.next .door__no { position: static; margin: 0 0 3px; }
-.next .door__addr { font-size: 12px; line-height: 1.45; color: rgba(10, 10, 12, 0.72); }
-.next .door__plate { margin-bottom: 10px; }
-.next .door__map {
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(10, 10, 12, 0.15);
-  aspect-ratio: auto;
-  height: 235px;
-  margin: 4px 0 2px;
-  background: #e8eaed;
+.club__corner--tl { top: 10px; left: 10px; border-top: 2px solid var(--yellow); border-left: 2px solid var(--yellow); }
+.club__corner--br { bottom: 10px; right: 10px; border-bottom: 2px solid var(--yellow); border-right: 2px solid var(--yellow); }
+.next .club:hover .club__corner,
+.next .club:focus-visible .club__corner,
+.next .club.is-active .club__corner { opacity: 1; }
+
+.club__no { font-family: var(--font-tech); font-size: 10.5px; letter-spacing: 0.3em; color: var(--blue); }
+.club__name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(18px, 1.6vw, 23px);
+  line-height: 1.05;
+  text-transform: uppercase;
 }
-.next .door__map iframe { width: 100%; height: 100%; border: 0; display: block; }
-.next .door__actions { padding-top: 18px; }
-@media (max-width: 640px) {
-  /* на узкой карточке правый блок не помещается рядом с плашкой -
-     раскладываем в поток: плашка → CLUB 0X + адрес → карта → кнопки */
-  .next .door__meta {
-    position: static;
-    order: 2;
-    text-align: left;
-    max-width: none;
-    margin: 2px 0 8px;
+.club__meta { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(244, 245, 247, 0.8); }
+.club__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--metro, var(--blue));
+  color: #fff;
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 9px;
+}
+.club__dot--time { color: #000; } /* на жёлтом кружке белые цифры не читаются */
+.club__addr { font-size: 13.5px; color: var(--mut); }
+.club__zones { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.club__zones span {
+  font-family: var(--font-tech);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  border: 1px solid rgba(43, 89, 255, 0.5);
+  background: var(--blue-soft);
+  border-radius: 7px;
+  padding: 5px 9px;
+}
+.club__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid var(--line);
+}
+.club__book {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--yellow);
+}
+.club__book b { transition: transform 0.25s ease; }
+.next .club:hover .club__book b { transform: translateX(4px); }
+.club__route {
+  font-family: var(--font-tech);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--mut);
+  border-bottom: 1px solid transparent;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+.club__route:hover { color: var(--white); border-bottom-color: rgba(244, 245, 247, 0.5); }
+
+@media (max-width: 900px) {
+  .next .doors {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    grid-template-columns: repeat(2, 1fr);
+    overflow-x: visible;
   }
-  .next .door__plate { order: 1; }
-  .next .door__map { order: 3; height: 200px; }
-  .next .door__actions { order: 4; }
+}
+@media (max-width: 600px) {
+  .next .doors { grid-template-columns: 1fr; }
 }
