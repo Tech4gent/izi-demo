@@ -271,7 +271,18 @@
   letter-spacing: 0.14em;
   margin-bottom: 5px;
 }
-.pop__addr { font-size: 12.5px; color: var(--mut); margin-bottom: 12px; }
+.pop__addr { font-size: 12.5px; color: var(--mut); margin-bottom: 8px; }
+.pop__phone { /* телефон конкретного клуба */
+  display: block;
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 12px;
+  transition: color 0.25s ease;
+}
+.pop__phone:hover { color: var(--yellow); }
 .pop__btns { display: flex; gap: 8px; }
 .pop__btns a {
   font-family: var(--font-tech);
