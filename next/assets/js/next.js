@@ -15,6 +15,8 @@ const CITIES = {
     factText: 'Белорусская, Курская, Профсоюзная и 1905 года. Своя атмосфера - один уровень.',
     hud: 'MSK // 55.75 N · 37.61 E',
     vk: 'https://vk.ru/izimsk',
+    phone: '+7 (995) 900-50-17', // из описания группы VK: клуб на Белорусской
+    phoneRaw: '79959005017',
   },
   khv: {
     name: 'ХАБАРОВСК',
@@ -23,6 +25,8 @@ const CITIES = {
     factText: 'Калинина и Краснореченская. Своя атмосфера - один уровень.',
     hud: 'KHV // 48.48 N · 135.07 E',
     vk: 'https://vk.ru/izicyber',
+    phone: '+7 (914) 421-00-12', // из описания группы VK: клуб на Калинина
+    phoneRaw: '79144210012',
   },
 };
 const CLUBS = [
@@ -55,6 +59,7 @@ const netmap = L.map('netmap', {
   attributionControl: true,
 });
 netmap.attributionControl.setPrefix(false); // только © OpenStreetMap · © CARTO
+netmap.zoomControl.setPosition('bottomleft'); // кнопки масштаба уводим вниз, чтобы не спорили с окошком клуба
 if (L.Browser.mobile) netmap.dragging.disable(); // на тач карту двигают кнопками зума, страница скроллится свободно
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   subdomains: 'abcd',
@@ -167,6 +172,15 @@ function applyCity(code, animate) {
   const footerVk = document.getElementById('footerVk');
   footerVk.href = city.vk;
   footerVk.textContent = 'VK · ' + city.name;
+
+  // контакты города: телефон и мессенджеры на том же номере
+  document.getElementById('contactCity').textContent = city.name;
+  const phoneLink = document.getElementById('contactPhone');
+  phoneLink.textContent = city.phone;
+  phoneLink.href = 'tel:+' + city.phoneRaw;
+  document.getElementById('contactWa').href = 'https://wa.me/' + city.phoneRaw;
+  document.getElementById('contactTg').href = 'https://t.me/+' + city.phoneRaw;
+  document.getElementById('contactVk').href = city.vk;
   document.querySelectorAll('.doors').forEach((g) => { g.hidden = g.dataset.city !== code; });
 
   netmap.closePopup();

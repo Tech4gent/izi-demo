@@ -442,3 +442,93 @@
 @media (max-width: 600px) {
   .next .doors { grid-template-columns: 1fr; }
 }
+
+/* -------- Значок 24/7 в карточке (там, где нет метро) -------- */
+.club__badge {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: var(--yellow);
+  color: #000;
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  vertical-align: 1px;
+}
+
+/* -------- Контакты выбранного города -------- */
+.contactbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 4vw, 48px);
+  flex-wrap: wrap;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: clamp(24px, 3.4vw, 40px);
+  overflow: hidden;
+}
+.contactbox::after { /* энерголиния по нижней кромке - как у перф-карточек */
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%, var(--blue) 25%, var(--yellow) 50%, var(--blue) 75%, transparent 100%);
+  background-size: 220% 100%;
+  animation: energy-flow 3.4s linear infinite;
+  opacity: 0.85;
+}
+.contactbox .club__corner { opacity: 1; }
+.contactbox__city {
+  font-family: var(--font-tech);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: var(--blue);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.contactbox__phone {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(24px, 3.4vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  transition: color 0.25s ease;
+}
+.contactbox__phone:hover { color: var(--yellow); }
+.contactbox__note { margin-top: 12px; font-size: 13.5px; color: var(--mut); max-width: 44ch; }
+.contactbox__btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.cbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-tech);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  padding: 14px 22px;
+  border-radius: 13px;
+  border: 2px solid transparent;
+  white-space: nowrap;
+  will-change: transform;
+  transition: box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.cbtn svg { width: 18px; height: 18px; flex-shrink: 0; }
+.cbtn--wa { background: #25d366; color: #05240f; }
+.cbtn--wa:hover { box-shadow: 0 0 30px rgba(37, 211, 102, 0.4); }
+.cbtn--tg { background: #29a9eb; color: #04202f; }
+.cbtn--tg:hover { box-shadow: 0 0 30px rgba(41, 169, 235, 0.4); }
+.cbtn--vk { border-color: rgba(244, 245, 247, 0.35); color: var(--white); }
+.cbtn--vk:hover { border-color: var(--white); background: rgba(244, 245, 247, 0.06); }
+
+@media (max-width: 700px) {
+  .contactbox { flex-direction: column; align-items: flex-start; }
+  .contactbox__btns { width: 100%; }
+  .cbtn { flex: 1 1 auto; justify-content: center; }
+}
