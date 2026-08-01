@@ -506,9 +506,9 @@
   flex: 0 0 auto;
   width: clamp(332px, 31vw, 412px);
   /* отрицательный отступ: карточки в развороте укорачиваются, и без него между
-     ними зияла бы дыра. Замер по кадрам: средний видимый зазор 167 -> 37 px,
-     как и просили. Ширина набора всё так же кратна карточке, шов не виден */
-  margin-right: -150px;
+     ними зияла бы дыра. Замер по кадрам: средний видимый зазор 90 px.
+     Ширина набора всё так же кратна карточке, шов при перемотке не виден */
+  margin-right: -100px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -591,6 +591,11 @@
 @media (max-width: 700px) {
   /* на телефоне карточка не может занимать весь экран: соседние должны
      заглядывать по краям, иначе карусели не видно */
-  .ccard { width: min(68vw, 290px); margin-right: -70px; }
-  .ccard__btns .cbtn { flex: 1 1 auto; justify-content: center; }
+  .ccard { width: min(68vw, 290px); margin-right: -40px; padding: 22px 20px 18px; }
+  /* номер не должен обрезаться краем узкой карточки */
+  .ccard__phone { font-size: min(19px, 4.6vw); }
+  /* кнопки в узкой карточке: две в ряд помещаются только в ужатом виде */
+  .ccard__btns { gap: 8px; }
+  .ccard__btns .cbtn { flex: 1 1 0; min-width: 0; justify-content: center; font-size: 12px; padding: 12px 8px; gap: 7px; }
+  .ccard__btns .cbtn svg { width: 16px; height: 16px; }
 }

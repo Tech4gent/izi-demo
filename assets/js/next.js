@@ -135,10 +135,13 @@ const CONV_BASE = 35; // px/сек - базовая скорость, когда
 const CONV_BOOST_MAX = 620; // потолок разгона от прокрутки страницы
 const CONV_FLING_MAX = 2600; // потолок скорости от броска
 const CONV_REF = 250; // на таком отдалении от центра карточка уже полностью в наклоне
+const CONV_HOLD = 2600; // мс паузы после нажатия на карточку
 let convPos = 0; // сдвиг ленты в px, всегда внутри [0, convSet)
 let convSet = 0; // ширина одного набора карточек: на неё отматываем назад
 let convExtra = 0; // добавка скорости от прокрутки страницы
 let convFling = 0; // добавка от броска пальцем или мышью
+let convHoldUntil = 0; // нажали на карточку - до этого момента лента придержана
+let convHold = 0; // 0..1: чтобы вставать и трогаться плавно, а не рывком
 let convCards = [];
 let convCenters = [];
 
@@ -188,6 +191,8 @@ function convRelease() {
   if (!convGrab) return;
   convFling = Math.max(-CONV_FLING_MAX, Math.min(CONV_FLING_MAX, convGrab.v));
   convClickGuard = convGrab.moved > 6; // тащили, а не нажимали - клик не засчитываем
+  // нажали на карточку, а не потянули ленту - придерживаем, чтобы успеть прочитать
+  if (!convClickGuard) convHoldUntil = performance.now() + CONV_HOLD;
   convGrab = null;
   conveyor.classList.remove('is-drag');
 }
@@ -217,8 +222,10 @@ requestAnimationFrame(function convTick(now) {
     // сглаживания нормированы по dt: одинаково на 30 и на 144 Гц
     convExtra += (boost - convExtra) * (1 - Math.exp(-dt / 130));
     convFling *= Math.exp(-dt / 320);
+    // пауза после нажатия: гасим собственный ход ленты, реакция на прокрутку остаётся
+    convHold += ((now < convHoldUntil ? 1 : 0) - convHold) * (1 - Math.exp(-dt / 170));
 
-    if (!convGrab) convPos += ((CONV_BASE + convExtra + convFling) * dt) / 1000;
+    if (!convGrab) convPos += (((CONV_BASE + convFling) * (1 - convHold) + convExtra) * dt) / 1000;
     convPos = ((convPos % convSet) + convSet) % convSet; // шов невидим: дальше такой же набор
     convTrack.style.transform = `translate3d(${-convPos}px, 0, 0)`;
 
