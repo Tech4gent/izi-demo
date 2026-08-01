@@ -71,7 +71,8 @@
 
 /* -------- База -------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: auto; }
+/* scrollbar-gutter: полоса прокрутки не появляется рывком и не сдвигает вёрстку */
+html { scroll-behavior: auto; scrollbar-gutter: stable; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
@@ -138,11 +139,19 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   align-items: center;
   justify-content: center;
 }
+/* Геометрия прелоадера жёстко зафиксирована: высоты всех строк заданы в px,
+   лого - фоновая картинка. Ни шрифт, ни картинка не могут сдвинуть блок. */
 .preloader__inner { display: flex; flex-direction: column; align-items: center; width: min(360px, 80vw); }
-.preloader__logo { width: 132px; }
+.preloader__logo {
+  width: 132px;
+  height: 132px;
+  background: url(../img/logo-white.png) center / contain no-repeat;
+}
 .preloader__sub {
   font-family: var(--font-tech);
   font-size: 11px;
+  line-height: 16px;
+  height: 16px;
   letter-spacing: 0.42em;
   margin: 14px 0 40px;
   color: var(--mut);
@@ -168,6 +177,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   margin-top: 12px;
   font-family: var(--font-tech);
   font-size: 11px;
+  line-height: 15px;
+  height: 15px;
   letter-spacing: 0.14em;
   color: var(--mut);
 }
@@ -177,6 +188,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   bottom: 34px;
   left: 0;
   right: 0;
+  height: 14px;
+  line-height: 14px;
   text-align: center;
   font-family: var(--font-tech);
   font-size: 10px;

@@ -89,17 +89,18 @@ gsap.to(loadState, {
   onComplete: hidePreloader,
 });
 
+/* Уходим растворением, а не сдвигом всего экрана: на слабых машинах
+   проезд чёрной плашки на всю высоту идёт рывками */
 function hidePreloader() {
-  gsap.to(preloader, {
-    yPercent: -100,
-    duration: 0.7,
-    ease: 'power3.inOut',
-    delay: 0.25,
+  gsap.timeline({
+    delay: 0.2,
     onComplete() {
       preloader.style.display = 'none';
       ScrollTrigger.refresh();
     },
-  });
+  })
+    .to('.preloader__inner, .preloader__hint', { opacity: 0, y: -16, duration: 0.35, ease: 'power2.in' })
+    .to(preloader, { opacity: 0, duration: 0.45, ease: 'power2.inOut' }, '-=0.12');
   introHero();
 }
 

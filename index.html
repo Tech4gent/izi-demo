@@ -16,9 +16,9 @@
   <!-- ПРЕЛОАДЕР: экран загрузки в стиле игрового меню -->
   <div class="preloader" id="preloader" aria-hidden="true">
     <div class="preloader__inner">
-      <!-- размеры проставлены, чтобы место под лого держалось до загрузки: иначе блок прыгает.
-           alt пустой - прелоадер и так aria-hidden, а alt-текст мигал на месте картинки -->
-      <img class="preloader__logo" src="assets/img/logo-white.png" alt="" width="800" height="800">
+      <!-- лого фоном, а не <img>: картинка вообще не участвует в раскладке,
+           поэтому её загрузка не может сдвинуть блок ни на пиксель -->
+      <div class="preloader__logo"></div>
       <div class="preloader__sub">КОМПЬЮТЕРНЫЙ КЛУБ</div>
       <div class="preloader__bar"><div class="preloader__fill" id="preloaderFill"></div></div>
       <div class="preloader__row">
@@ -462,6 +462,7 @@
   <script src="assets/vendor/ScrollTrigger.min.js"></script>
   <script src="assets/js/main.js"></script>
   <script src="assets/vendor/leaflet/leaflet.js"></script>
+  <script src="assets/js/clubs.js"></script>
   <script src="assets/js/next.js"></script>
 </body>
 </html>
