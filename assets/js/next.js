@@ -134,10 +134,13 @@ const convTrack = document.getElementById('contactTrack');
 const CONV_BASE = 35; // px/сек - базовая скорость, когда гость ничего не делает
 const CONV_BOOST_MAX = 620; // потолок разгона от прокрутки страницы
 const CONV_FLING_MAX = 2600; // потолок скорости от броска
+const CONV_REF = 250; // на таком отдалении от центра карточка уже полностью в наклоне
 let convPos = 0; // сдвиг ленты в px, всегда внутри [0, convSet)
 let convSet = 0; // ширина одного набора карточек: на неё отматываем назад
 let convExtra = 0; // добавка скорости от прокрутки страницы
 let convFling = 0; // добавка от броска пальцем или мышью
+let convCards = [];
+let convCenters = [];
 
 function buildContacts(code) {
   const list = CLUBS.filter((c) => c.city === code);
@@ -147,6 +150,9 @@ function buildContacts(code) {
   const copies = Math.max(2, Math.ceil(conveyor.clientWidth / convSet) + 1);
   const clones = list.map((c) => contactCard(c, true)).join('');
   convTrack.innerHTML = convTrack.innerHTML + clones.repeat(copies - 1);
+  // центры карточек внутри ленты: по ним считается разворот каждой относительно середины экрана
+  convCards = [...convTrack.children];
+  convCenters = convCards.map((c) => c.offsetLeft + c.offsetWidth / 2);
   convPos = 0;
 }
 
@@ -214,11 +220,17 @@ requestAnimationFrame(function convTick(now) {
 
     if (!convGrab) convPos += ((CONV_BASE + convExtra + convFling) * dt) / 1000;
     convPos = ((convPos % convSet) + convSet) % convSet; // шов невидим: дальше такой же набор
+    convTrack.style.transform = `translate3d(${-convPos}px, 0, 0)`;
 
-    // наклон по ходу движения - лента «ложится» на скорость
-    const motion = convGrab ? convGrab.v : convExtra + convFling;
-    const skew = Math.max(-6, Math.min(6, motion * 0.008));
-    convTrack.style.transform = `translate3d(${-convPos}px, 0, 0) skewX(${skew.toFixed(2)}deg)`;
+    // боковые наклоны: центральная карточка развёрнута к зрителю, края уходят в глубину
+    const mid = conveyor.clientWidth / 2;
+    const ref = Math.min(mid, CONV_REF); // на таком отдалении от центра карточка уже полностью в наклоне
+    convCards.forEach((card, i) => {
+      const d = Math.max(-1.4, Math.min(1.4, (convCenters[i] - convPos - mid) / ref));
+      const flat = Math.abs(d);
+      card.style.transform = `rotateY(${(-d * 50).toFixed(1)}deg) translateZ(${(-flat * 190).toFixed(0)}px)`;
+      card.style.opacity = Math.max(0.14, 1 - flat * 0.6).toFixed(2);
+    });
   }
   requestAnimationFrame(convTick);
 });
