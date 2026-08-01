@@ -142,6 +142,15 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   align-items: center;
   justify-content: center;
 }
+/* На мобиле высота fixed-элемента меняется, когда браузер прячет адресную
+   строку, и центрированный по ней блок уезжает. svh - устойчивая высота,
+   она не пляшет. Полоска снизу, если строка спряталась, того же цвета. */
+@supports (height: 100svh) {
+  .preloader { height: 100svh; }
+}
+/* пока идёт загрузка, страница под прелоадером не прокручивается:
+   заодно адресная строка на мобиле не сворачивается посреди загрузки */
+body.is-loading { overflow: hidden; }
 /* Геометрия прелоадера жёстко зафиксирована: высоты всех строк заданы в px,
    лого - фоновая картинка. Ни шрифт, ни картинка не могут сдвинуть блок. */
 .preloader__inner { display: flex; flex-direction: column; align-items: center; width: min(360px, 80vw); }

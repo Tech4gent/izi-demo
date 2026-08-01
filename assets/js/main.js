@@ -75,6 +75,18 @@ const STATUSES = [
   "LET'S PLAY",
 ];
 
+/* Прибиваем содержимое экрана загрузки к стартовой высоте окна.
+   На мобиле высота меняется на ходу (браузер прячет адресную строку),
+   и центрированный по ней блок уезжает - именно это и «прыгало». */
+(function pinPreloader() {
+  const inner = preloader.querySelector('.preloader__inner');
+  const hint = preloader.querySelector('.preloader__hint');
+  const h = window.innerHeight;
+  inner.style.cssText = 'position:absolute;left:50%;top:' + Math.round(h / 2) + 'px;transform:translate(-50%,-50%)';
+  hint.style.top = Math.round(h - 48) + 'px';
+  hint.style.bottom = 'auto';
+})();
+
 const loadState = { p: 0 };
 gsap.to(loadState, {
   p: 100,
@@ -92,6 +104,7 @@ gsap.to(loadState, {
 /* Уходим растворением, а не сдвигом всего экрана: на слабых машинах
    проезд чёрной плашки на всю высоту идёт рывками */
 function hidePreloader() {
+  document.body.classList.remove('is-loading'); // возвращаем странице прокрутку
   gsap.timeline({
     delay: 0.2,
     onComplete() {
