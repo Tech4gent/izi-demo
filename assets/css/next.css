@@ -272,7 +272,8 @@
   margin-bottom: 5px;
 }
 .pop__addr { font-size: 12.5px; color: var(--mut); margin-bottom: 8px; }
-.pop__phone { /* телефон конкретного клуба */
+/* телефон конкретного клуба; через .izi-pop - перебиваем цвет ссылок Leaflet */
+.izi-pop .pop__phone {
   display: block;
   font-family: var(--font-tech);
   font-weight: 700;
@@ -282,9 +283,20 @@
   margin-bottom: 12px;
   transition: color 0.25s ease;
 }
-.pop__phone:hover { color: var(--yellow); }
+.izi-pop .pop__phone:hover { color: var(--yellow); }
+.pop__stub { /* у клуба ещё нет своего номера - подписываем честно */
+  font-family: var(--font-tech);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mut);
+  margin: -8px 0 11px;
+}
 .pop__btns { display: flex; gap: 8px; }
-.pop__btns a {
+.pop__msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   font-family: var(--font-tech);
   font-weight: 700;
   font-size: 10.5px;
@@ -292,11 +304,13 @@
   padding: 9px 13px;
   border-radius: 9px;
   white-space: nowrap;
+  transition: box-shadow 0.25s ease;
 }
-.pop__book { background: var(--yellow); color: #000 !important; }
-.pop__book:hover { box-shadow: 0 0 18px rgba(255, 230, 0, 0.4); }
-.pop__route { border: 1px solid rgba(244, 245, 247, 0.35); color: var(--white) !important; }
-.pop__route:hover { border-color: var(--white); }
+.pop__msg svg { width: 14px; height: 14px; flex-shrink: 0; }
+.pop__msg--wa { background: #25d366; color: #05240f !important; }
+.pop__msg--wa:hover { box-shadow: 0 0 18px rgba(37, 211, 102, 0.45); }
+.pop__msg--tg { background: #29a9eb; color: #04202f !important; }
+.pop__msg--tg:hover { box-shadow: 0 0 18px rgba(41, 169, 235, 0.45); }
 
 
 /* -------- Цена в спеках зоны: порядок блоков от дорогой к дешёвой -------- */
@@ -469,21 +483,35 @@
   vertical-align: 1px;
 }
 
-/* -------- Контакты выбранного города -------- */
-.contactbox {
+/* -------- Контакты: лента карточек по клубам, едет сама -------- */
+.conveyor {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  /* края уходят в затемнение - лента выглядит бесконечной */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
+  padding: 4px 0 8px;
+}
+.conveyor::-webkit-scrollbar { display: none; }
+.conveyor__rail { display: flex; width: max-content; }
+.ccard {
   position: relative;
+  flex: 0 0 auto;
+  width: clamp(266px, 25vw, 330px);
+  margin-right: 16px; /* отступ внутри карточки: ширина набора кратна ей, шов при перемотке не виден */
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(20px, 4vw, 48px);
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 8px;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: clamp(24px, 3.4vw, 40px);
+  border-radius: 18px;
+  padding: 22px 22px 18px;
   overflow: hidden;
+  transition: border-color 0.3s ease;
 }
-.contactbox::after { /* энерголиния по нижней кромке - как у перф-карточек */
+.ccard:hover { border-color: rgba(43, 89, 255, 0.7); }
+.ccard::after { /* энерголиния по нижней кромке - как у перф-карточек */
   content: '';
   position: absolute;
   inset: auto 0 0 0;
@@ -494,27 +522,38 @@
   animation: energy-flow 3.4s linear infinite;
   opacity: 0.85;
 }
-.contactbox .club__corner { opacity: 1; }
-.contactbox__city {
+.ccard .club__corner { opacity: 1; }
+.ccard__club {
   font-family: var(--font-tech);
-  font-size: 11px;
+  font-weight: 700;
+  font-size: 10.5px;
   letter-spacing: 0.28em;
   color: var(--blue);
-  margin-bottom: 12px;
   text-transform: uppercase;
 }
-.contactbox__phone {
-  display: inline-block;
+.ccard__addr { font-size: 13px; color: var(--mut); }
+.ccard__phone {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(24px, 3.4vw, 42px);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  white-space: nowrap; /* номер не разрывается по строкам */
   transition: color 0.25s ease;
 }
-.contactbox__phone:hover { color: var(--yellow); }
-.contactbox__note { margin-top: 12px; font-size: 13.5px; color: var(--mut); max-width: 44ch; }
-.contactbox__btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.ccard__phone:hover { color: var(--yellow); }
+.ccard__stub {
+  font-family: var(--font-tech);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mut);
+  margin-top: -4px;
+}
+.ccard__btns { display: flex; gap: 8px; margin-top: auto; padding-top: 10px; }
+.ccard__btns .cbtn { font-size: 11.5px; padding: 11px 15px; border-radius: 11px; }
+.ccard__btns .cbtn svg { width: 15px; height: 15px; }
+.contacts__note { margin-top: 16px; font-size: 13.5px; color: var(--mut); max-width: 58ch; }
 .cbtn {
   display: inline-flex;
   align-items: center;
@@ -539,7 +578,6 @@
 .cbtn--vk:hover { border-color: var(--white); background: rgba(244, 245, 247, 0.06); }
 
 @media (max-width: 700px) {
-  .contactbox { flex-direction: column; align-items: flex-start; }
-  .contactbox__btns { width: 100%; }
-  .cbtn { flex: 1 1 auto; justify-content: center; }
+  .ccard { width: min(78vw, 300px); }
+  .ccard__btns .cbtn { flex: 1 1 auto; justify-content: center; }
 }

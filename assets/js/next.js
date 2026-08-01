@@ -41,6 +41,26 @@ const CLUBS = [
 
 const finePointerNext = window.matchMedia('(pointer: fine)').matches;
 
+/* Иконки мессенджеров - одни и те же в окошке на карте и в ленте контактов */
+const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91C21.95 6.45 17.5 2 12.04 2zm5.8 14.16c-.24.68-1.2 1.26-1.98 1.42-.53.11-1.22.2-3.55-.76-2.98-1.23-4.9-4.25-5.05-4.45-.15-.2-1.2-1.6-1.2-3.05s.76-2.16 1.03-2.46c.27-.3.59-.37.79-.37h.57c.18 0 .43-.07.67.51.24.6.83 2.05.9 2.2.08.15.13.32.03.52-.1.2-.15.32-.3.5-.15.17-.31.38-.44.51-.15.15-.3.31-.13.61.17.3.76 1.25 1.63 2.03 1.12 1 2.07 1.31 2.37 1.46.3.15.47.13.64-.08.17-.2.74-.86.93-1.16.2-.3.39-.25.66-.15.27.1 1.71.81 2 .96.3.15.5.22.57.35.07.13.07.75-.17 1.41z"/></svg>';
+const TG_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 4.3 2.9 11.5c-.9.35-.9.85-.15 1.08l4.75 1.48 1.83 5.6c.22.6.4.83.85.83.35 0 .5-.16.7-.35l2.28-2.22 4.75 3.5c.87.48 1.5.23 1.72-.8l3.1-14.6c.32-1.27-.48-1.85-1.3-1.5z"/></svg>';
+
+/* Телефон клуба. У нового клуба на 1905 года своего номера пока нет -
+   заглушка: показываем общий номер города и подписываем это честно.
+   TODO: заменить на номер клуба, когда клиент его пришлёт. */
+function clubPhone(club) {
+  if (club.phone) return { phone: club.phone, raw: club.phoneRaw, stub: false };
+  const city = CITIES[club.city];
+  return { phone: city.phone, raw: city.phoneRaw, stub: true };
+}
+
+/* Кнопки мессенджеров на номере клуба: WhatsApp и Telegram есть на любом номере */
+function msgBtns(raw, cls, clone) {
+  const tail = clone ? ' tabindex="-1"' : '';
+  return `<a class="${cls} ${cls}--wa" href="https://wa.me/${raw}" target="_blank" rel="noopener"${tail}>${WA_ICON}<span>WhatsApp</span></a>` +
+    `<a class="${cls} ${cls}--tg" href="https://t.me/+${raw}" target="_blank" rel="noopener"${tail}>${TG_ICON}<span>Telegram</span></a>`;
+}
+
 /* -------- Определение города: сохранённый выбор или часовой пояс -------- */
 function detectCity() {
   const saved = localStorage.getItem(CITY_KEY);
@@ -79,14 +99,13 @@ CLUBS.forEach((club) => {
     iconAnchor: [7, 7],
     popupAnchor: [0, -12],
   });
+  const ph = clubPhone(club);
   const marker = L.marker(club.ll, { icon }).bindPopup(
     `<div class="pop__name">IZI · ${club.name}</div>` +
     `<div class="pop__addr">${club.addr}</div>` +
-    (club.phone ? `<a class="pop__phone" href="tel:+${club.phoneRaw}">${club.phone}</a>` : '') +
-    `<div class="pop__btns">` +
-    `<a class="pop__book" href="${CITIES[club.city].vk}" target="_blank" rel="noopener">ЗАБРОНИРОВАТЬ</a>` +
-    `<a class="pop__route" href="${club.ya}" target="_blank" rel="noopener">МАРШРУТ</a>` +
-    `</div>`,
+    `<a class="pop__phone" href="tel:+${ph.raw}">${ph.phone}</a>` +
+    (ph.stub ? `<div class="pop__stub">общий номер сети</div>` : '') +
+    `<div class="pop__btns">${msgBtns(ph.raw, 'pop__msg')}</div>`,
     { className: 'izi-pop', closeButton: true }
   );
   marker.on('mouseover', () => { cancelClose(); setActive(club.id); });
@@ -116,7 +135,8 @@ function setActive(id) {
     card.classList.toggle('is-active', card.dataset.club === id);
   });
   markers[id].openPopup();
-  netmap.panInside(L.latLng(club.ll), { padding: [50, 60] }); // сдвигаем минимально, только если окошко не влезает
+  // сдвигаем минимально, только если окошко не влезает; сверху запас на всю его высоту
+  netmap.panInside(L.latLng(club.ll), { paddingTopLeft: [60, 190], paddingBottomRight: [60, 40] });
 }
 
 function clearActive() {
@@ -161,6 +181,86 @@ document.querySelectorAll('.club[data-club]').forEach((card) => {
   });
 });
 
+/* -------- Контакты: лента карточек клубов, едет сама -------- */
+const conveyor = document.getElementById('contactRail');
+const convTrack = document.getElementById('contactTrack');
+const CONV_SPEED = 14; // px/сек - лента ползёт еле заметно
+let convPos = 0;
+let convSet = 0; // ширина одного набора карточек: на неё отматываем назад
+let convPaused = false;
+let convTimer = null;
+
+function contactCard(club, clone) {
+  const ph = clubPhone(club);
+  return `<article class="ccard"${clone ? ' aria-hidden="true"' : ''}>` +
+    `<i class="club__corner club__corner--tl" aria-hidden="true"></i>` +
+    `<i class="club__corner club__corner--br" aria-hidden="true"></i>` +
+    `<div class="ccard__club">IZI · ${club.name}</div>` +
+    `<div class="ccard__addr">${club.addr}</div>` +
+    `<a class="ccard__phone" href="tel:+${ph.raw}"${clone ? ' tabindex="-1"' : ''}>${ph.phone}</a>` +
+    (ph.stub ? `<div class="ccard__stub">общий номер сети</div>` : '') +
+    `<div class="ccard__btns">${msgBtns(ph.raw, 'cbtn', clone)}</div>` +
+    `</article>`;
+}
+
+function buildContacts(code) {
+  const list = CLUBS.filter((c) => c.city === code);
+  convTrack.innerHTML = list.map((c) => contactCard(c, false)).join('');
+  convSet = convTrack.scrollWidth; // у карточек margin-right, поэтому наборы стыкуются без шва
+  // дублируем набор, пока лента не станет длиннее экрана - иначе прокручивать нечего
+  const copies = Math.max(2, Math.ceil(conveyor.clientWidth / convSet) + 1);
+  const clones = list.map((c) => contactCard(c, true)).join('');
+  convTrack.innerHTML = convTrack.innerHTML + clones.repeat(copies - 1);
+  conveyor.scrollLeft = 0;
+  convPos = 0;
+}
+
+function convPause(resumeAfter) {
+  convPaused = true;
+  clearTimeout(convTimer);
+  if (resumeAfter) convTimer = setTimeout(convResume, resumeAfter);
+}
+function convResume() {
+  convPos = conveyor.scrollLeft; // пользователь мог утащить ленту - продолжаем с его места
+  convPaused = false;
+}
+
+// пауза на действия пользователя, дальше едем сама
+let convDrag = false;
+conveyor.addEventListener('pointerdown', () => { convDrag = true; convPause(0); });
+// отпустить палец могли уже за пределами ленты - слушаем окно, иначе пауза залипнет
+window.addEventListener('pointerup', () => {
+  if (!convDrag) return;
+  convDrag = false;
+  convPause(conveyor.matches(':hover') ? 0 : 3500);
+});
+window.addEventListener('pointercancel', () => { if (convDrag) { convDrag = false; convPause(3500); } });
+conveyor.addEventListener('wheel', () => convPause(3500), { passive: true });
+conveyor.addEventListener('focusin', () => convPause(0));
+conveyor.addEventListener('focusout', () => convPause(1200));
+if (finePointerNext) {
+  conveyor.addEventListener('pointerenter', () => convPause(0));
+  conveyor.addEventListener('pointerleave', () => convPause(600));
+}
+
+let convLast = performance.now();
+requestAnimationFrame(function convTick(now) {
+  const dt = Math.min(80, now - convLast); // после сворачивания вкладки не прыгаем
+  convLast = now;
+  if (!convPaused && convSet > 0) {
+    convPos += (CONV_SPEED * dt) / 1000;
+    if (convPos >= convSet) convPos -= convSet; // шов невидим: дальше идёт такой же набор
+    conveyor.scrollLeft = convPos;
+  }
+  requestAnimationFrame(convTick);
+});
+
+let convResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(convResizeTimer);
+  convResizeTimer = setTimeout(() => buildContacts(currentCity), 250);
+});
+
 /* -------- Применение города ко всему сайту -------- */
 function applyCity(code, animate) {
   currentCity = code;
@@ -175,13 +275,7 @@ function applyCity(code, animate) {
   footerVk.href = city.vk;
   footerVk.textContent = 'VK · ' + city.name;
 
-  // контакты города: телефон и мессенджеры на том же номере
-  document.getElementById('contactCity').textContent = city.name;
-  const phoneLink = document.getElementById('contactPhone');
-  phoneLink.textContent = city.phone;
-  phoneLink.href = 'tel:+' + city.phoneRaw;
-  document.getElementById('contactWa').href = 'https://wa.me/' + city.phoneRaw;
-  document.getElementById('contactTg').href = 'https://t.me/+' + city.phoneRaw;
+  buildContacts(code); // лента контактов: карточка на каждый клуб города
   document.querySelectorAll('.doors').forEach((g) => { g.hidden = g.dataset.city !== code; });
 
   netmap.closePopup();
