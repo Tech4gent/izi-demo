@@ -501,9 +501,15 @@
 /* position: relative - чтобы карточки считали offsetLeft от ленты, а не от страницы:
    по нему считается наклон каждой карточки относительно центра */
 .conveyor__rail { position: relative; display: flex; width: max-content; transform-style: preserve-3d; will-change: transform; }
+/* Вся внутренняя раскладка карточки задана в em от её собственного кегля:
+   на телефоне меняется одна цифра - font-size, и карточка уменьшается
+   целиком, сохраняя те же пропорции, что и в браузере */
 .ccard {
   position: relative;
   flex: 0 0 auto;
+  /* кегль привязан к ширине карточки: на узком экране она сужается,
+     и всё внутри уменьшается вместе с ней, ничего не вылезает за край */
+  font-size: clamp(14.5px, 1.36vw, 16px);
   width: clamp(332px, 31vw, 412px);
   /* отрицательный отступ: карточки в развороте укорачиваются, и без него между
      ними зияла бы дыра. Замер по кадрам: средний видимый зазор 90 px.
@@ -511,11 +517,11 @@
   margin-right: -100px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.62em;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 27px 27px 22px;
+  border-radius: 1.37em;
+  padding: 1.69em 1.69em 1.37em;
   overflow: hidden;
   backface-visibility: hidden; /* при развороте текст не мылится */
   transition: border-color 0.3s ease;
@@ -533,20 +539,19 @@
   opacity: 0.85;
 }
 .ccard .club__corner { opacity: 1; }
-/* всё внутри карточки крупнее на четверть - вместе с самой карточкой */
 .ccard__club {
   font-family: var(--font-tech);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 0.81em;
   letter-spacing: 0.28em;
   color: var(--blue);
   text-transform: uppercase;
 }
-.ccard__addr { font-size: 16px; color: var(--mut); }
+.ccard__addr { font-size: 1em; color: var(--mut); }
 .ccard__phone {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(21px, 1.9vw, 26px);
+  font-size: 1.6em;
   line-height: 1.1;
   letter-spacing: -0.02em;
   white-space: nowrap; /* номер не разрывается по строкам */
@@ -555,15 +560,15 @@
 .ccard__phone:hover { color: var(--yellow); }
 .ccard__stub {
   font-family: var(--font-tech);
-  font-size: 12px;
+  font-size: 0.75em;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--mut);
-  margin-top: -5px;
+  margin-top: -0.3em;
 }
-.ccard__btns { display: flex; gap: 10px; margin-top: auto; padding-top: 12px; }
-.ccard__btns .cbtn { font-size: 14px; padding: 14px 19px; border-radius: 13px; }
-.ccard__btns .cbtn svg { width: 19px; height: 19px; }
+.ccard__btns { display: flex; gap: 0.62em; margin-top: auto; padding-top: 0.75em; }
+.ccard__btns .cbtn { font-size: 0.87em; padding: 0.87em 1.19em; border-radius: 0.81em; gap: 0.56em; }
+.ccard__btns .cbtn svg { width: 1.19em; height: 1.19em; }
 .contacts__note { margin-top: 16px; font-size: 13.5px; color: var(--mut); max-width: 58ch; }
 .cbtn {
   display: inline-flex;
@@ -590,12 +595,8 @@
 
 @media (max-width: 700px) {
   /* на телефоне карточка не может занимать весь экран: соседние должны
-     заглядывать по краям, иначе карусели не видно */
-  .ccard { width: min(68vw, 290px); margin-right: -40px; padding: 22px 20px 18px; }
-  /* номер не должен обрезаться краем узкой карточки */
-  .ccard__phone { font-size: min(19px, 4.6vw); }
-  /* кнопки в узкой карточке: две в ряд помещаются только в ужатом виде */
-  .ccard__btns { gap: 8px; }
-  .ccard__btns .cbtn { flex: 1 1 0; min-width: 0; justify-content: center; font-size: 12px; padding: 12px 8px; gap: 7px; }
-  .ccard__btns .cbtn svg { width: 16px; height: 16px; }
+     заглядывать по краям, иначе карусели не видно. Кегль - единственная
+     ручка размера: всё внутри уменьшается вместе с ним в тех же пропорциях */
+  .ccard { font-size: min(12.4px, 2.95vw); width: min(68vw, 290px); margin-right: -40px; }
+  .ccard__btns .cbtn { flex: 1 1 0; min-width: 0; justify-content: center; }
 }
