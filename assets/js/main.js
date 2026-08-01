@@ -75,16 +75,19 @@ const STATUSES = [
   "LET'S PLAY",
 ];
 
-/* Прибиваем содержимое экрана загрузки к стартовой высоте окна.
-   На мобиле высота меняется на ходу (браузер прячет адресную строку),
-   и центрированный по ней блок уезжает - именно это и «прыгало». */
+/* Прибиваем содержимое экрана загрузки к стартовым размерам окна - в пикселях,
+   по обеим осям. На мобиле окно меняется прямо во время загрузки (браузер
+   прячет адресную строку, появляется и исчезает полоса прокрутки), и всё,
+   что центрировано в процентах, от этого уезжает. */
 (function pinPreloader() {
   const inner = preloader.querySelector('.preloader__inner');
   const hint = preloader.querySelector('.preloader__hint');
-  const h = window.innerHeight;
-  inner.style.cssText = 'position:absolute;left:50%;top:' + Math.round(h / 2) + 'px;transform:translate(-50%,-50%)';
-  hint.style.top = Math.round(h - 48) + 'px';
-  hint.style.bottom = 'auto';
+  const box = preloader.getBoundingClientRect();
+  inner.style.cssText = 'position:absolute;transform:none;left:' +
+    Math.round(box.width / 2 - inner.offsetWidth / 2) + 'px;top:' +
+    Math.round(box.height / 2 - inner.offsetHeight / 2) + 'px';
+  hint.style.cssText = 'position:absolute;left:0;width:' + Math.round(box.width) +
+    'px;top:' + Math.round(box.height - 48) + 'px';
 })();
 
 const loadState = { p: 0 };
@@ -104,7 +107,6 @@ gsap.to(loadState, {
 /* Уходим растворением, а не сдвигом всего экрана: на слабых машинах
    проезд чёрной плашки на всю высоту идёт рывками */
 function hidePreloader() {
-  document.body.classList.remove('is-loading'); // возвращаем странице прокрутку
   gsap.timeline({
     delay: 0.2,
     onComplete() {
