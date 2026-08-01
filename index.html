@@ -6,6 +6,11 @@
   <meta name="robots" content="noindex, nofollow">
   <title>IZI - компьютерный клуб. NO GAME - NO LIFE</title>
   <meta name="description" content="Сеть компьютерных клубов IZI: Москва и Хабаровск. RTX 5080, мониторы до 600 Гц, пинг 0.5 ms, честные цены, 24/7.">
+  <!-- всё, из чего собран экран загрузки, тянем в первую очередь: иначе текст
+       успевает нарисоваться запасным шрифтом, а логотип появляется позже -->
+  <link rel="preload" href="assets/fonts/tektur-cyr.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/tektur-lat.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/img/logo-white.png" as="image">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="assets/css/next.css">
