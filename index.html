@@ -16,7 +16,9 @@
   <!-- ПРЕЛОАДЕР: экран загрузки в стиле игрового меню -->
   <div class="preloader" id="preloader" aria-hidden="true">
     <div class="preloader__inner">
-      <img class="preloader__logo" src="assets/img/logo-white.png" alt="IZI">
+      <!-- размеры проставлены, чтобы место под лого держалось до загрузки: иначе блок прыгает.
+           alt пустой - прелоадер и так aria-hidden, а alt-текст мигал на месте картинки -->
+      <img class="preloader__logo" src="assets/img/logo-white.png" alt="" width="800" height="800">
       <div class="preloader__sub">КОМПЬЮТЕРНЫЙ КЛУБ</div>
       <div class="preloader__bar"><div class="preloader__fill" id="preloaderFill"></div></div>
       <div class="preloader__row">
@@ -30,7 +32,7 @@
   <!-- ХЕДЕР -->
   <header class="header" id="header">
     <a class="header__brand" href="#top" data-nav>
-      <img class="header__logo" src="assets/img/logo-white.png" alt="IZI">
+      <img class="header__logo" src="assets/img/logo-white.png" alt="IZI" width="800" height="800">
       <span class="header__brandtext">КОМПЬЮТЕРНЫЙ<br>КЛУБ</span>
     </a>
     <nav class="header__nav">
@@ -57,7 +59,7 @@
       <div class="hero__shade"></div>
       <div class="hero__content">
         <div class="hero__tag" data-reveal>СЕТЬ КОМПЬЮТЕРНЫХ КЛУБОВ · <span id="heroTagCity">МОСКВА</span></div>
-        <img class="hero__logo" src="assets/img/logo-white.png" alt="IZI" data-reveal>
+        <img class="hero__logo" src="assets/img/logo-white.png" alt="IZI" width="800" height="800" data-reveal>
         <h1 class="hero__title" data-split>NO GAME<br>NO LIFE</h1>
         <p class="hero__sub" data-reveal>Топовое железо, пинг как на турнирах и цены, за которые не стыдно.<br>Заходи и играй - всё уже настроено.</p>
         <div class="hero__actions" data-reveal>
@@ -426,7 +428,7 @@
       <div class="conveyor" id="contactRail" data-reveal>
         <div class="conveyor__rail" id="contactTrack"></div>
       </div>
-      <div class="contacts__note" data-reveal>Подскажем свободные места, забронируем комнату и ответим по железу. Лента едет сама - тронешь пальцем, подождёт.</div>
+      <div class="contacts__note" data-reveal>Подскажем свободные места, забронируем комнату и ответим по железу. Ленту можно швырнуть пальцем или мышью - подхватит бросок и поедет дальше.</div>
     </section>
 
   </main>
@@ -435,7 +437,7 @@
   <footer class="footer">
     <div class="footer__top">
       <div class="footer__brand">
-        <img src="assets/img/logo-white.png" alt="IZI">
+        <img src="assets/img/logo-white.png" alt="IZI" width="800" height="800">
         <span>NO GAME - NO LIFE</span>
       </div>
       <nav class="footer__nav">

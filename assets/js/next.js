@@ -184,11 +184,15 @@ document.querySelectorAll('.club[data-club]').forEach((card) => {
 /* -------- Контакты: лента карточек клубов, едет сама -------- */
 const conveyor = document.getElementById('contactRail');
 const convTrack = document.getElementById('contactTrack');
-const CONV_SPEED = 14; // px/сек - лента ползёт еле заметно
-let convPos = 0;
+const CONV_BASE = 35; // px/сек - базовая скорость, когда гость ничего не делает
+const CONV_BOOST_MAX = 620; // потолок разгона от прокрутки страницы
+const CONV_FLING_MAX = 2600; // потолок скорости от броска
+let convPos = 0; // сдвиг ленты в px, всегда внутри [0, convSet)
 let convSet = 0; // ширина одного набора карточек: на неё отматываем назад
-let convPaused = false;
-let convTimer = null;
+let convExtra = 0; // добавка скорости от прокрутки страницы
+let convFling = 0; // добавка от броска пальцем или мышью
+let convHold = 0; // 0..1: под курсором лента замирает
+let convHover = false;
 
 function contactCard(club, clone) {
   const ph = clubPhone(club);
@@ -211,46 +215,83 @@ function buildContacts(code) {
   const copies = Math.max(2, Math.ceil(conveyor.clientWidth / convSet) + 1);
   const clones = list.map((c) => contactCard(c, true)).join('');
   convTrack.innerHTML = convTrack.innerHTML + clones.repeat(copies - 1);
-  conveyor.scrollLeft = 0;
   convPos = 0;
 }
 
-function convPause(resumeAfter) {
-  convPaused = true;
-  clearTimeout(convTimer);
-  if (resumeAfter) convTimer = setTimeout(convResume, resumeAfter);
-}
-function convResume() {
-  convPos = conveyor.scrollLeft; // пользователь мог утащить ленту - продолжаем с его места
-  convPaused = false;
-}
+/* Бросок: тянем ленту за курсором или пальцем, на отпускании она
+   докручивается по инерции и возвращается к базовой скорости */
+let convGrab = null;
+let convClickGuard = false;
 
-// пауза на действия пользователя, дальше едем сама
-let convDrag = false;
-conveyor.addEventListener('pointerdown', () => { convDrag = true; convPause(0); });
-// отпустить палец могли уже за пределами ленты - слушаем окно, иначе пауза залипнет
-window.addEventListener('pointerup', () => {
-  if (!convDrag) return;
-  convDrag = false;
-  convPause(conveyor.matches(':hover') ? 0 : 3500);
+conveyor.addEventListener('pointerdown', (e) => {
+  if (e.button > 0) return;
+  convGrab = { x: e.clientX, lastX: e.clientX, pos: convPos, t: performance.now(), v: 0, moved: 0 };
+  convFling = 0;
+  convClickGuard = false;
+  conveyor.setPointerCapture(e.pointerId);
+  conveyor.classList.add('is-drag');
 });
-window.addEventListener('pointercancel', () => { if (convDrag) { convDrag = false; convPause(3500); } });
-conveyor.addEventListener('wheel', () => convPause(3500), { passive: true });
-conveyor.addEventListener('focusin', () => convPause(0));
-conveyor.addEventListener('focusout', () => convPause(1200));
-if (finePointerNext) {
-  conveyor.addEventListener('pointerenter', () => convPause(0));
-  conveyor.addEventListener('pointerleave', () => convPause(600));
+
+conveyor.addEventListener('pointermove', (e) => {
+  if (!convGrab) return;
+  const shift = e.clientX - convGrab.x;
+  convPos = convGrab.pos - shift;
+  convGrab.moved = Math.max(convGrab.moved, Math.abs(shift));
+  const now = performance.now();
+  const dt = now - convGrab.t;
+  if (dt > 0) {
+    convGrab.v = ((convGrab.lastX - e.clientX) / dt) * 1000; // px/сек в сторону хода ленты
+    convGrab.t = now;
+    convGrab.lastX = e.clientX;
+  }
+});
+
+function convRelease() {
+  if (!convGrab) return;
+  convFling = Math.max(-CONV_FLING_MAX, Math.min(CONV_FLING_MAX, convGrab.v));
+  convClickGuard = convGrab.moved > 6; // тащили, а не нажимали - клик не засчитываем
+  convGrab = null;
+  conveyor.classList.remove('is-drag');
 }
+conveyor.addEventListener('pointerup', convRelease);
+conveyor.addEventListener('pointercancel', convRelease);
+conveyor.addEventListener('click', (e) => {
+  if (!convClickGuard) return;
+  convClickGuard = false;
+  e.preventDefault();
+  e.stopPropagation();
+}, true);
+
+// под курсором лента замирает, чтобы можно было прочитать номер и нажать кнопку
+if (finePointerNext) {
+  conveyor.addEventListener('pointerenter', () => { convHover = true; });
+  conveyor.addEventListener('pointerleave', () => { convHover = false; });
+}
+conveyor.addEventListener('focusin', () => { convHover = true; conveyor.scrollLeft = 0; });
+conveyor.addEventListener('focusout', () => { convHover = false; });
 
 let convLast = performance.now();
+let convScrollY = window.scrollY;
 requestAnimationFrame(function convTick(now) {
   const dt = Math.min(80, now - convLast); // после сворачивания вкладки не прыгаем
   convLast = now;
-  if (!convPaused && convSet > 0) {
-    convPos += (CONV_SPEED * dt) / 1000;
-    if (convPos >= convSet) convPos -= convSet; // шов невидим: дальше идёт такой же набор
-    conveyor.scrollLeft = convPos;
+  if (convSet > 0) {
+    // прокрутка страницы подхватывает ленту: вниз - разгон вперёд, вверх - назад
+    const pageSpeed = ((window.scrollY - convScrollY) / dt) * 1000;
+    convScrollY = window.scrollY;
+    const boost = Math.max(-CONV_BOOST_MAX, Math.min(CONV_BOOST_MAX, pageSpeed * 0.4));
+    // сглаживания нормированы по dt: одинаково на 30 и на 144 Гц
+    convExtra += (boost - convExtra) * (1 - Math.exp(-dt / 130));
+    convFling *= Math.exp(-dt / 320);
+    convHold += ((convHover ? 1 : 0) - convHold) * (1 - Math.exp(-dt / 120));
+
+    if (!convGrab) convPos += ((CONV_BASE * (1 - convHold) + convExtra + convFling) * dt) / 1000;
+    convPos = ((convPos % convSet) + convSet) % convSet; // шов невидим: дальше такой же набор
+
+    // наклон по ходу движения - лента «ложится» на скорость
+    const motion = convGrab ? convGrab.v : convExtra + convFling;
+    const skew = Math.max(-6, Math.min(6, motion * 0.008));
+    convTrack.style.transform = `translate3d(${-convPos}px, 0, 0) skewX(${skew.toFixed(2)}deg)`;
   }
   requestAnimationFrame(convTick);
 });

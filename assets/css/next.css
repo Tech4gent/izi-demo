@@ -483,18 +483,18 @@
   vertical-align: 1px;
 }
 
-/* -------- Контакты: лента карточек по клубам, едет сама -------- */
+/* -------- Контакты: лента карточек по клубам, живёт от прокрутки и броска -------- */
 .conveyor {
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
+  overflow: hidden;
+  touch-action: pan-y; /* вертикальный свайп отдаём странице, горизонталь ловим сами */
+  cursor: grab;
   /* края уходят в затемнение - лента выглядит бесконечной */
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
   mask-image: linear-gradient(90deg, transparent 0, #000 46px, #000 calc(100% - 46px), transparent 100%);
   padding: 4px 0 8px;
 }
-.conveyor::-webkit-scrollbar { display: none; }
-.conveyor__rail { display: flex; width: max-content; }
+.conveyor.is-drag { cursor: grabbing; user-select: none; }
+.conveyor__rail { display: flex; width: max-content; will-change: transform; }
 .ccard {
   position: relative;
   flex: 0 0 auto;
