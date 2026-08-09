@@ -189,22 +189,19 @@ function buildHolo(root) {
   }, 4200);
 }
 
-/* -------- 07. Игровой ролик: нарезка жанровых сцен, в конце карточка -------- */
-/* Сцены рисуются кодом. Появится лицензионный скриншот - его достаточно
-   выдать сцене как background-image, остальная механика не изменится. */
+/* -------- 07. Ретро-аркада: пиксельные сцены, в конце карточка -------- */
+/* Всё рисуется кодом по мотивам ЖАНРОВ: механики свободны, а конкретные
+   игры, их персонажи и названия защищены - в демо клиента им не место. */
 const GAME_SCENES = [
-  { tag: 'ТАКТИЧЕСКИЙ ШУТЕР', cls: 'gs--shooter', art: '<i class="gs-cross"></i><i class="gs-hit"></i>' },
-  { tag: 'МОБА · 5 НА 5', cls: 'gs--moba', art: '<i class="gs-lane"></i><i class="gs-lane"></i><i class="gs-lane"></i><i class="gs-pulse"></i>' },
-  { tag: 'КОРОЛЕВСКАЯ БИТВА', cls: 'gs--royale', art: '<i class="gs-zone"></i><i class="gs-zone gs-zone--in"></i><i class="gs-drop"></i>' },
-  { tag: 'ГОНКИ', cls: 'gs--race', art: '<i class="gs-speed"></i>' },
-  { tag: 'ФАЙТИНГ', cls: 'gs--fight', art: '<i class="gs-hp"></i><i class="gs-hp gs-hp--r"></i><b class="gs-ko">K.O.</b>' },
-  { tag: 'КОСМИЧЕСКИЙ БОЙ', cls: 'gs--space', art: '<i class="gs-stars"></i><i class="gs-ship"></i>' },
-  { tag: 'ХОРРОР', cls: 'gs--horror', art: '<i class="gs-figure"></i><i class="gs-eyes"></i><i class="gs-torch"></i>' },
-  { tag: 'СТРАТЕГИЯ', cls: 'gs--strategy', art: '<i class="gs-unit"></i><i class="gs-unit gs-unit--b"></i>' },
-  { tag: 'ПИКСЕЛЬ-ПЛАТФОРМЕР', cls: 'gs--pixel', art: '<i class="gs-blocks"></i><i class="gs-hero"></i>' },
-  { tag: 'КИБЕРАРЕНА', cls: 'gs--arena', art: '<i class="gs-beam"></i><i class="gs-beam gs-beam--r"></i><i class="gs-cup"></i>' },
+  { tag: 'ПАДАЮЩИЕ БЛОКИ', cls: 'gs--blocks', art: '<i class="rt-well"></i><i class="rt-piece"></i><i class="rt-stack"></i><i class="rt-clear"></i>' },
+  { tag: 'ЛАБИРИНТ И ТОЧКИ', cls: 'gs--maze', art: '<i class="rt-maze"></i><i class="rt-dots"></i><i class="rt-chomp"></i><i class="rt-hunter"></i>' },
+  { tag: 'МОРСКОЙ БОЙ', cls: 'gs--navy', art: '<i class="rt-grid"></i><i class="rt-miss"></i><i class="rt-aim"></i><b class="rt-hit">ПОПАЛ</b>' },
+  { tag: 'ПРЫЖКИ ПО ПЛАТФОРМАМ', cls: 'gs--jump', art: '<i class="rt-plat"></i><i class="rt-plat rt-plat--hi"></i><i class="rt-spikes"></i><i class="rt-coin"></i><i class="rt-hero"></i>' },
+  { tag: 'ЗМЕЙКА', cls: 'gs--snake', art: '<i class="rt-grid rt-grid--sm"></i><i class="rt-snake"></i><i class="rt-apple"></i>' },
+  { tag: 'ЗАХВАТЧИКИ', cls: 'gs--invaders', art: '<i class="rt-inv"></i><i class="rt-inv rt-inv--b"></i><i class="rt-inv rt-inv--c"></i><i class="rt-shot"></i><i class="rt-gun"></i>' },
+  { tag: 'ПИНГ-ПОНГ', cls: 'gs--pong', art: '<i class="rt-pad"></i><i class="rt-pad rt-pad--r"></i><i class="rt-ball"></i><i class="rt-net"></i>' },
 ];
-const GS_CUT = 520; // мс на кадр
+const GS_CUT = 620; // мс на кадр
 const GS_HOLD = 3400; // мс на карточку в конце
 
 function buildGames(root) {
