@@ -136,6 +136,50 @@ document.querySelectorAll('.club[data-club]').forEach((card) => {
   });
 });
 
+/* -------- Прайс: вкладки клубов, таблица собирается из данных -------- */
+const priceTabs = document.getElementById('priceTabs');
+const priceWrap = document.getElementById('priceWrap');
+const priceNote = document.getElementById('priceNote');
+
+function dayMode() { // будни или выходные - берём с активной кнопки
+  const active = document.querySelector('[data-daytab].is-active');
+  return active ? active.dataset.daytab : 'wd';
+}
+
+function renderPrices(id) {
+  const club = CLUBS.find((c) => c.id === id);
+  const { data, own } = clubPrices(id);
+  const mode = dayMode();
+  const duo = (i) => (data.zones[i].duo ? ' class="pricetable__duo"' : '');
+  priceWrap.innerHTML =
+    '<table class="pricetable" id="priceTable"><thead><tr><th class="pricetable__slot">ТАРИФ</th>' +
+    data.zones.map((z, i) => `<th${duo(i)}><b>${z.name}</b><span>${z.spec}</span></th>`).join('') +
+    '</tr></thead><tbody>' +
+    data.rows.map((r) => `<tr><td><b>${r.name}</b><span>${r.time}</span></td>` +
+      r.wd.map((v, i) => `<td${duo(i)} data-wd="${v}" data-we="${r.we[i]}">${mode === 'we' ? r.we[i] : v}</td>`).join('') +
+      '</tr>').join('') +
+    '</tbody></table>';
+  priceNote.textContent = own
+    ? `Прайс клуба «${club.name}». Тарифы других клубов сети смотри на соседних вкладках.`
+    : `Для клуба «${club.name}» прайс уточняется - показан прайс клуба на Белорусской. Актуальные цены подскажут в группе VK.`;
+}
+
+function renderPriceTabs(code) {
+  const list = CLUBS.filter((c) => c.city === code);
+  priceTabs.innerHTML = list
+    .map((c, i) => `<button class="clubtab${i ? '' : ' is-active'}" type="button" data-price-club="${c.id}">${c.name}</button>`)
+    .join('');
+  renderPrices(list[0].id);
+}
+
+priceTabs.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-price-club]');
+  if (!btn || btn.classList.contains('is-active')) return;
+  [...priceTabs.children].forEach((b) => b.classList.toggle('is-active', b === btn));
+  renderPrices(btn.dataset.priceClub);
+  gsap.fromTo('#priceTable tbody td', { opacity: 0.25 }, { opacity: 1, duration: 0.45, ease: 'power2.out' });
+});
+
 /* -------- Контакты: лента карточек клубов, едет сама -------- */
 const conveyor = document.getElementById('contactRail');
 const convTrack = document.getElementById('contactTrack');
@@ -315,6 +359,7 @@ function applyCity(code, animate) {
   footerVk.href = city.vk;
   footerVk.textContent = 'VK · ' + city.name;
 
+  renderPriceTabs(code); // прайс: вкладки клубов этого города
   buildContacts(code); // лента контактов: карточка на каждый клуб города
   document.querySelectorAll('.doors').forEach((g) => { g.hidden = g.dataset.city !== code; });
 

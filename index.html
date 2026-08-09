@@ -240,70 +240,17 @@
         <div class="label" data-reveal>// ЦЕНЫ</div>
         <h2 class="h2" data-split>ЧЕСТНЫЙ ПРАЙС</h2>
       </div>
+      <!-- вкладки клубов: в разных клубах свои зоны и цены, таблица строится из данных -->
+      <div class="clubtabs" id="priceTabs" data-reveal></div>
       <div class="pricetabs" data-reveal>
         <button class="pricetab is-active" data-daytab="wd" type="button">БУДНИ</button>
         <button class="pricetab" data-daytab="we" type="button">ВЫХОДНЫЕ</button>
       </div>
       <div class="prices__swipe" data-reveal aria-hidden="true">Таблица листается вбок &rarr;</div>
-      <div class="pricewrap" data-reveal>
-        <table class="pricetable" id="priceTable">
-          <thead>
-            <tr>
-              <th class="pricetable__slot">ТАРИФ</th>
-              <th><b>COMFORT</b><span>RTX 3070 · 280 Гц</span></th>
-              <th><b>VIP</b><span>RTX 4070 SUPER · 400 Гц</span></th>
-              <th class="pricetable__duo"><b>SUPER DUO</b><span>RTX 5080 · 600 Гц</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Почасовая · день</b><span>08:00-14:00</span></td>
-              <td data-wd="180" data-we="220">180</td>
-              <td data-wd="290" data-we="330">290</td>
-              <td class="pricetable__duo" data-wd="580" data-we="640">580</td>
-            </tr>
-            <tr>
-              <td><b>Пакет · день 3 часа</b><span>08:00-14:00</span></td>
-              <td data-wd="490" data-we="610">490</td>
-              <td data-wd="800" data-we="910">800</td>
-              <td class="pricetable__duo" data-wd="1600" data-we="1820">1600</td>
-            </tr>
-            <tr>
-              <td><b>Пакет · день 5 часов</b><span>08:00-13:00</span></td>
-              <td data-wd="790" data-we="960">790</td>
-              <td data-wd="1260" data-we="1440">1260</td>
-              <td class="pricetable__duo" data-wd="2520" data-we="2940">2520</td>
-            </tr>
-            <tr>
-              <td><b>Почасовая · вечер и ночь</b><span>14:00-08:00</span></td>
-              <td data-wd="220" data-we="260">220</td>
-              <td data-wd="330" data-we="360">330</td>
-              <td class="pricetable__duo" data-wd="640" data-we="740">640</td>
-            </tr>
-            <tr>
-              <td><b>Пакет · вечер 3 часа</b><span>14:00-08:00</span></td>
-              <td data-wd="620" data-we="740">620</td>
-              <td data-wd="940" data-we="1030">940</td>
-              <td class="pricetable__duo" data-wd="1820" data-we="2110">1820</td>
-            </tr>
-            <tr>
-              <td><b>Пакет · вечер 5 часов</b><span>13:00-08:00</span></td>
-              <td data-wd="1010" data-we="1190">1010</td>
-              <td data-wd="1520" data-we="1660">1520</td>
-              <td class="pricetable__duo" data-wd="2940" data-we="3410">2940</td>
-            </tr>
-            <tr>
-              <td><b>Пакет · ночь 10 часов</b><span>23:00-09:00</span></td>
-              <td data-wd="1090" data-we="1290">1090</td>
-              <td data-wd="1640" data-we="1790">1640</td>
-              <td class="pricetable__duo" data-wd="3190" data-we="3690">3190</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <div class="pricewrap" id="priceWrap" data-reveal></div>
       <div class="prices__notes" data-reveal>
         <p>Все цены в рублях. Выходные - время с 00:00 пятницы (или праздничного дня) до 23:59 воскресенья (или последнего праздничного дня).</p>
-        <p>Прайс клуба на Белорусской. В других клубах цены могут отличаться - уточняй в группе VK своего города.</p>
+        <p id="priceNote"></p>
       </div>
     </section>
 
