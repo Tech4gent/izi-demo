@@ -1,0 +1,236 @@
+/* ============================================================
+   Страница выбора анимации блока контактов (рабочая, не для клиента).
+   Карточка берёт стили из next.css, здесь только сцены и эффекты.
+   ============================================================ */
+
+.anim-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 330px;
+  perspective: 1400px;
+}
+.anims .anim-stage .ccard { width: 380px; margin-right: 0; }
+@media (max-width: 700px) {
+  .anim-stage { height: 300px; }
+  .anims .anim-stage .ccard { width: min(80vw, 330px); }
+}
+
+/* -------- 01. Сборка: каркас, потом строки, потом кнопки -------- */
+@keyframes asm-panel {
+  0% { transform: scaleX(0.12) scaleY(0.04); opacity: 0; }
+  38% { transform: scaleX(1) scaleY(0.04); opacity: 1; }
+  100% { transform: scaleX(1) scaleY(1); opacity: 1; }
+}
+@keyframes asm-line {
+  0% { opacity: 0; transform: translateX(-22px); clip-path: inset(0 100% 0 0); }
+  100% { opacity: 1; transform: translateX(0); clip-path: inset(0 0 0 0); }
+}
+@keyframes asm-btn {
+  0% { opacity: 0; transform: translateY(16px) scale(0.7); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes asm-corner {
+  0% { opacity: 0; transform: scale(3.4) rotate(-25deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes asm-out {
+  0% { opacity: 1; clip-path: inset(0 0 0 0); }
+  100% { opacity: 0; clip-path: inset(48% 0 48% 0); }
+}
+.asm .ccard { animation: asm-panel 0.62s cubic-bezier(0.22, 1, 0.3, 1) both; }
+.asm .ccard__club { animation: asm-line 0.42s ease-out 0.34s both; }
+.asm .ccard__addr { animation: asm-line 0.42s ease-out 0.46s both; }
+.asm .ccard__phone { animation: asm-line 0.42s ease-out 0.58s both; }
+.asm .ccard__stub { animation: asm-line 0.42s ease-out 0.66s both; }
+.asm .ccard__btns .cbtn { animation: asm-btn 0.44s cubic-bezier(0.2, 1.7, 0.4, 1) both; }
+.asm .ccard__btns .cbtn:nth-child(2) { animation-delay: 0.86s; }
+.asm .ccard__btns .cbtn:nth-child(1) { animation-delay: 0.76s; }
+.asm .club__corner { animation: asm-corner 0.4s cubic-bezier(0.2, 1.6, 0.4, 1) 0.24s both; }
+.asm.is-out .ccard { animation: asm-out 0.34s ease-in both; }
+
+/* -------- 02. Телепорт: полосы, глитч, цветное раздвоение -------- */
+@keyframes glitch-in {
+  0% { opacity: 0; transform: translateX(-26px) scaleY(0.05); filter: none; }
+  18% { opacity: 1; transform: translateX(14px) scaleY(1); clip-path: inset(0 0 62% 0); }
+  30% { transform: translateX(-10px); clip-path: inset(58% 0 12% 0); }
+  42% { transform: translateX(7px); clip-path: inset(22% 0 44% 0); }
+  54% { transform: translateX(-4px); clip-path: inset(0 0 0 0); }
+  70% { transform: translateX(2px); }
+  100% { opacity: 1; transform: translateX(0); clip-path: inset(0 0 0 0); }
+}
+@keyframes glitch-out {
+  0% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateX(0); }
+  25% { transform: translateX(9px); clip-path: inset(32% 0 26% 0); }
+  55% { transform: translateX(-13px); clip-path: inset(6% 0 58% 0); }
+  100% { opacity: 0; transform: translateX(30px) scaleY(0.04); }
+}
+@keyframes glitch-rgb {
+  0%, 100% { filter: none; }
+  20% { filter: drop-shadow(-5px 0 rgba(255, 0, 90, 0.75)) drop-shadow(5px 0 rgba(0, 220, 255, 0.75)); }
+  45% { filter: drop-shadow(4px 0 rgba(255, 0, 90, 0.6)) drop-shadow(-4px 0 rgba(0, 220, 255, 0.6)); }
+  70% { filter: drop-shadow(-2px 0 rgba(255, 0, 90, 0.4)) drop-shadow(2px 0 rgba(0, 220, 255, 0.4)); }
+}
+@keyframes glitch-scan {
+  0% { top: -8%; opacity: 0; }
+  15% { opacity: 1; }
+  100% { top: 108%; opacity: 0; }
+}
+.tp { position: relative; }
+.tp .ccard { animation: glitch-in 0.6s steps(24, end) both, glitch-rgb 0.6s linear both; }
+.tp.is-out .ccard { animation: glitch-out 0.36s steps(14, end) both, glitch-rgb 0.36s linear both; }
+.tp__scan {
+  position: absolute;
+  left: -6%;
+  width: 112%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--cyan, #27e0ff), transparent);
+  box-shadow: 0 0 18px rgba(39, 224, 255, 0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+.tp.is-flash .tp__scan { animation: glitch-scan 0.55s linear both; }
+
+/* -------- 03. Взрыв: осколки во все стороны -------- */
+.boom { position: relative; }
+.boom__parts { /* размер и место задаёт JS - ровно по карточке */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.boom__parts i {
+  position: absolute;
+  display: block;
+  background: linear-gradient(140deg, #2b59ff, rgba(39, 224, 255, 0.7));
+  border: 1px solid rgba(160, 200, 255, 0.8);
+  border-radius: 3px;
+  box-shadow: 0 0 16px rgba(43, 89, 255, 0.6);
+  opacity: 0;
+}
+/* каждый третий осколок жёлтый - фирменная искра в разлёте */
+.boom__parts i:nth-child(3n) {
+  background: linear-gradient(140deg, var(--yellow), rgba(255, 230, 0, 0.55));
+  border-color: rgba(255, 245, 160, 0.9);
+  box-shadow: 0 0 16px rgba(255, 230, 0, 0.5);
+}
+@keyframes boom-fly {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); }
+  60% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.4); }
+}
+@keyframes boom-gather {
+  0% { opacity: 1; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.4); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(0, 0) rotate(0) scale(1); }
+}
+@keyframes boom-card-in {
+  0% { opacity: 0; transform: scale(0.82); filter: brightness(2.4); }
+  55% { opacity: 1; }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+}
+@keyframes boom-card-out {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.14); filter: brightness(2.2); }
+}
+.boom .ccard { animation: boom-card-in 0.5s cubic-bezier(0.2, 1, 0.3, 1) 0.28s both; }
+.boom.is-out .ccard { animation: boom-card-out 0.3s ease-in both; }
+.boom.is-out .boom__parts i { animation: boom-fly 0.58s cubic-bezier(0.3, 0.6, 0.4, 1) both; }
+.boom.is-in .boom__parts i { animation: boom-gather 0.5s cubic-bezier(0.3, 0.1, 0.2, 1) both; }
+
+/* -------- 04. Загрузка карты: заставка с полосой, потом карточка -------- */
+.lvl { position: relative; overflow: hidden; border-radius: 1.4em; }
+.lvl__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 26px 30px;
+  background:
+    radial-gradient(120% 90% at 15% 0%, rgba(43, 89, 255, 0.35), transparent 60%),
+    linear-gradient(180deg, #0a0b12, #05050a);
+  border: 1px solid rgba(43, 89, 255, 0.5);
+  border-radius: 1.4em;
+  transition: transform 0.55s cubic-bezier(0.7, 0, 0.2, 1);
+}
+.lvl.is-open .lvl__cover { transform: translateY(-101%); }
+.lvl__tag { font-family: var(--font-tech); font-size: 11px; letter-spacing: 0.34em; color: var(--yellow); }
+.lvl__name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(20px, 2.2vw, 30px); /* самое длинное название клуба должно влезать в строку */
+  line-height: 1;
+  text-transform: uppercase;
+}
+.lvl__bar { height: 4px; border-radius: 2px; background: rgba(244, 245, 247, 0.14); overflow: hidden; }
+.lvl__fill { display: block; height: 100%; width: 0; border-radius: 2px; background: var(--yellow); box-shadow: 0 0 16px rgba(255, 230, 0, 0.7); }
+.lvl.is-load .lvl__fill { animation: lvl-fill 1.15s cubic-bezier(0.4, 0.1, 0.2, 1) forwards; }
+@keyframes lvl-fill { from { width: 0; } to { width: 100%; } }
+.lvl__row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-tech);
+  font-size: 10.5px;
+  letter-spacing: 0.2em;
+  color: var(--mut);
+}
+
+/* -------- 05. Колода: стопка карточек -------- */
+/* стопке нужна своя высота: карточки в ней абсолютные, плюс запас на сдвиг нижних */
+.deck { position: relative; width: 380px; height: 285px; }
+@media (max-width: 700px) { .deck { width: min(80vw, 330px); height: 250px; } }
+.deck .ccard {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.3, 1), opacity 0.6s ease, filter 0.6s ease;
+}
+.deck .ccard.is-top { transform: none; z-index: 3; }
+.deck .ccard.is-mid { transform: translate(22px, 20px) scale(0.95) rotate(2.4deg); z-index: 2; filter: brightness(0.62); }
+.deck .ccard.is-back { transform: translate(44px, 38px) scale(0.9) rotate(4.8deg); z-index: 1; filter: brightness(0.4); }
+.deck .ccard.is-gone {
+  transform: translate(150%, -12%) rotate(16deg);
+  opacity: 0;
+  z-index: 4;
+  transition: transform 0.62s cubic-bezier(0.5, 0, 0.7, 0.3), opacity 0.62s ease;
+}
+
+/* -------- 06. Голограмма: проекция с развёрткой -------- */
+.holo { position: relative; }
+.holo .ccard { box-shadow: 0 0 60px rgba(39, 224, 255, 0.18); }
+@keyframes holo-in {
+  0% { opacity: 0; transform: scaleY(0.015); filter: brightness(3); }
+  35% { opacity: 1; transform: scaleY(0.015); }
+  55% { transform: scaleY(1.04); }
+  62% { opacity: 0.55; }
+  70% { opacity: 1; transform: scaleY(0.99); }
+  100% { opacity: 1; transform: scaleY(1); filter: brightness(1); }
+}
+@keyframes holo-out {
+  0% { opacity: 1; transform: scaleY(1); }
+  35% { opacity: 0.6; }
+  100% { opacity: 0; transform: scaleY(0.015); filter: brightness(2.6); }
+}
+@keyframes holo-flick {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  94% { opacity: 0.72; }
+  96% { opacity: 1; }
+}
+.holo .ccard { animation: holo-in 0.75s cubic-bezier(0.2, 1, 0.3, 1) both, holo-flick 3.4s linear 0.75s infinite; }
+.holo.is-out .ccard { animation: holo-out 0.4s ease-in both; }
+.holo .ccard::before { /* развёртка живёт внутри самой карточки */
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.4;
+  background: repeating-linear-gradient(180deg, rgba(39, 224, 255, 0.16) 0 1px, transparent 1px 4px);
+  animation: holo-drift 6s linear infinite;
+}
+@keyframes holo-drift { from { background-position-y: 0; } to { background-position-y: 40px; } }
