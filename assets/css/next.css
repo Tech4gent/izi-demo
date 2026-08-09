@@ -642,9 +642,15 @@
     radial-gradient(120% 90% at 15% 0%, rgba(43, 89, 255, 0.4), transparent 62%),
     linear-gradient(180deg, #0a0b12, #05050a);
   border-radius: inherit;
+  /* без перехода: заставка ВОЗВРАЩАЕТСЯ мгновенно. Плавно она только уезжает -
+     иначе на перемотке ленты видно, как крышка съезжает обратно на карточку */
+  transition: none;
+}
+.ccard.is-open .ccard__cover {
+  transform: translateY(-101%);
+  pointer-events: none;
   transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
 }
-.ccard.is-open .ccard__cover { transform: translateY(-101%); pointer-events: none; }
 .ccard__tag { font-family: var(--font-tech); font-size: 0.68em; letter-spacing: 0.3em; color: var(--yellow); }
 .ccard__name {
   font-family: var(--font-display);
