@@ -145,7 +145,7 @@ let convHold = 0; // 0..1: чтобы вставать и трогаться п�
 let convCards = [];
 let convCenters = [];
 let convFills = []; // полосы загрузки в заставках
-let convArmed = []; // карточка за правым краем ждёт своей «загрузки»
+let convOffsets = []; // у какой карточки заставка уезжает чуть раньше соседней
 
 function buildContacts(code) {
   const list = CLUBS.filter((c) => c.city === code);
@@ -169,7 +169,9 @@ function buildContacts(code) {
     convSet = step * list.length;
   }
   convFills = convCards.map((c) => c.querySelector('.ccard__fill'));
-  convArmed = convCards.map(() => true);
+  // разнобой открытия: сдвиг повторяется с периодом набора, иначе клон
+  // открывался бы не там, где оригинал, и шов стал бы заметен
+  convOffsets = convCards.map((c, i) => (i % list.length) * 30);
   convPos = convSet; // держим ленту на набор правее нуля - слева остаётся запас
 }
 
@@ -247,11 +249,11 @@ requestAnimationFrame(function convTick(now) {
     // боковые наклоны: центральная карточка развёрнута к зрителю, края уходят в глубину
     const mid = conveyor.clientWidth / 2;
     const ref = Math.min(mid, CONV_REF); // на таком отдалении от центра карточка уже полностью в наклоне
-    // Загрузка привязана к ПУТИ, а не к таймеру: полоса заполняется, пока карточка
-    // едет от правого края к середине, там заставка и уезжает. По времени эффект
-    // проходил почти весь за краем экрана - лента медленная.
+    // Загрузка привязана к ПУТИ и считается КАЖДЫЙ кадр от положения карточки:
+    // полоса заполняется, пока та едет от правого края к середине. Состояние не
+    // хранится у элемента - иначе на стыке в одной точке экрана оказывались то
+    // загружающаяся карточка, то давно открытая, и часть клубов загрузку пропускала.
     const startAt = conveyor.clientWidth;
-    const armAt = conveyor.clientWidth + 140;
     convCards.forEach((card, i) => {
       const x = convCenters[i] - convPos;
       const d = Math.max(-1.4, Math.min(1.4, (x - mid) / ref));
@@ -259,21 +261,11 @@ requestAnimationFrame(function convTick(now) {
       card.style.transform = `rotateY(${(-d * 50).toFixed(1)}deg) translateZ(${(-flat * 190).toFixed(0)}px)`;
       card.style.opacity = Math.max(0.14, 1 - flat * 0.6).toFixed(2);
 
-      if (x > armAt) {
-        // ушла за правый край (или лента перемоталась) - возвращаем заставку
-        if (!convArmed[i]) {
-          convArmed[i] = true;
-          card.classList.remove('is-open');
-          if (convFills[i]) convFills[i].style.width = '0%';
-        }
-        return;
-      }
-      convArmed[i] = false;
-      if (card.classList.contains('is-open')) return;
-      const openAt = mid - (i % 3) * 34; // соседние открываются не в одной точке
+      // сдвиг точки открытия повторяется вместе с набором, поэтому шов остаётся невидимым
+      const openAt = mid + 120 - convOffsets[i];
       const p = Math.max(0, Math.min(1, (startAt - x) / Math.max(160, startAt - openAt)));
+      card.classList.toggle('is-open', p >= 1);
       if (convFills[i]) convFills[i].style.width = (p * 100).toFixed(1) + '%';
-      if (p >= 1) card.classList.add('is-open');
     });
   }
   requestAnimationFrame(convTick);
