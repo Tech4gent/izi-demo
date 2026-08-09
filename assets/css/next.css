@@ -73,6 +73,9 @@
 .next .fact.is-lit { animation: fact-charge 1.3s ease-out both; }
 
 /* -------- Перф-карточки: общий стиль сайта -------- */
+/* до выезда карточки стоят со сдвигом ±90px по бокам: на узком экране они
+   растягивали страницу вширь и утаскивали за собой шапку - подрезаем секцию */
+.next .perf { overflow: hidden; }
 .next .perfcard {
   text-align: left;
   background: var(--panel);
@@ -312,6 +315,36 @@
 .pop__msg--tg { background: #29a9eb; color: #04202f !important; }
 .pop__msg--tg:hover { box-shadow: 0 0 18px rgba(41, 169, 235, 0.45); }
 
+
+/* -------- Прайс на узком экране: колонка тарифов закреплена, есть подсказка -------- */
+.prices__swipe { display: none; }
+@media (max-width: 900px) {
+  .prices__swipe {
+    display: block;
+    margin-bottom: 10px;
+    font-family: var(--font-tech);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--yellow);
+  }
+  /* иначе видно только первую колонку и непонятно, что справа есть ещё три */
+  .next .pricetable th:first-child,
+  .next .pricetable td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    width: 150px;
+    max-width: 150px;
+    background: #0c0d12;
+    box-shadow: 6px 0 14px rgba(0, 0, 0, 0.55);
+  }
+  /* ужимаем ячейки: на узком экране должно быть видно не только название тарифа */
+  .next .pricetable th, .next .pricetable td { padding: 12px 14px; }
+  .next .pricetable td { font-size: 18px; }
+  .next .pricetable td b { font-size: 13px; }
+  .next .pricetable td span { font-size: 11px; }
+}
 
 /* -------- Цена в спеках зоны: порядок блоков от дорогой к дешёвой -------- */
 .next .zone__price {
