@@ -600,8 +600,7 @@
   background: var(--yellow);
   box-shadow: 0 0 14px rgba(255, 230, 0, 0.7);
 }
-.ccard.is-load .ccard__fill { animation: ccard-fill 0.9s cubic-bezier(0.4, 0.1, 0.2, 1) forwards; }
-@keyframes ccard-fill { from { width: 0; } to { width: 100%; } }
+/* ширину полосы ведёт карусель: она отражает путь карточки до середины экрана */
 .ccard__row {
   display: flex;
   justify-content: space-between;
