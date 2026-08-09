@@ -189,9 +189,93 @@ function buildHolo(root) {
   }, 4200);
 }
 
+/* -------- 07. Игровой ролик: нарезка жанровых сцен, в конце карточка -------- */
+/* Сцены рисуются кодом. Появится лицензионный скриншот - его достаточно
+   выдать сцене как background-image, остальная механика не изменится. */
+const GAME_SCENES = [
+  { tag: 'ТАКТИЧЕСКИЙ ШУТЕР', cls: 'gs--shooter', art: '<i class="gs-cross"></i><i class="gs-hit"></i>' },
+  { tag: 'МОБА · 5 НА 5', cls: 'gs--moba', art: '<i class="gs-lane"></i><i class="gs-lane"></i><i class="gs-lane"></i><i class="gs-pulse"></i>' },
+  { tag: 'КОРОЛЕВСКАЯ БИТВА', cls: 'gs--royale', art: '<i class="gs-zone"></i><i class="gs-zone gs-zone--in"></i><i class="gs-drop"></i>' },
+  { tag: 'ГОНКИ', cls: 'gs--race', art: '<i class="gs-speed"></i>' },
+  { tag: 'ФАЙТИНГ', cls: 'gs--fight', art: '<i class="gs-hp"></i><i class="gs-hp gs-hp--r"></i><b class="gs-ko">K.O.</b>' },
+  { tag: 'КОСМИЧЕСКИЙ БОЙ', cls: 'gs--space', art: '<i class="gs-stars"></i><i class="gs-ship"></i>' },
+  { tag: 'ХОРРОР', cls: 'gs--horror', art: '<i class="gs-figure"></i><i class="gs-eyes"></i><i class="gs-torch"></i>' },
+  { tag: 'СТРАТЕГИЯ', cls: 'gs--strategy', art: '<i class="gs-unit"></i><i class="gs-unit gs-unit--b"></i>' },
+  { tag: 'ПИКСЕЛЬ-ПЛАТФОРМЕР', cls: 'gs--pixel', art: '<i class="gs-blocks"></i><i class="gs-hero"></i>' },
+  { tag: 'КИБЕРАРЕНА', cls: 'gs--arena', art: '<i class="gs-beam"></i><i class="gs-beam gs-beam--r"></i><i class="gs-cup"></i>' },
+];
+const GS_CUT = 520; // мс на кадр
+const GS_HOLD = 3400; // мс на карточку в конце
+
+function buildGames(root) {
+  root.classList.add('gs');
+  root.innerHTML = `<div class="gs__frame">` +
+    GAME_SCENES.map((s) => `<div class="gs__scene ${s.cls}">${s.art}</div>`).join('') +
+    `<div class="gs__card"></div><div class="gs__flash"></div>` +
+    `<div class="gs__hud"><span id="gsTag"></span><span id="gsIdx"></span></div></div>`;
+
+  const frame = root.firstElementChild;
+  const scenes = [...frame.querySelectorAll('.gs__scene')];
+  const cardBox = frame.querySelector('.gs__card');
+  const tag = frame.querySelector('#gsTag');
+  const idxLabel = frame.querySelector('#gsIdx');
+  let club = 0;
+  let i = 0;
+  let alive = false;
+  let timer = null;
+
+  const flash = () => {
+    root.classList.remove('is-flash');
+    void root.offsetWidth;
+    root.classList.add('is-flash');
+  };
+
+  const showScene = (n) => {
+    scenes.forEach((s, k) => s.classList.toggle('is-on', k === n));
+    // перезапускаем анимации сцены: без этого второй проход идёт статикой
+    const live = scenes[n];
+    live.querySelectorAll('i, b').forEach((el) => { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; });
+    tag.innerHTML = '// ' + GAME_SCENES[n].tag;
+    idxLabel.innerHTML = '<b>' + String(n + 1).padStart(2, '0') + '</b> / ' + GAME_SCENES.length;
+    flash();
+  };
+
+  const loop = () => {
+    if (!alive) return;
+    if (i < GAME_SCENES.length) {
+      showScene(i);
+      i += 1;
+      timer = setTimeout(loop, GS_CUT);
+      return;
+    }
+    // финал: из последнего кадра собирается карточка клуба
+    cardBox.innerHTML = contactCard(A_CLUBS[club], false);
+    cardBox.classList.add('is-on');
+    root.classList.add('is-card');
+    tag.innerHTML = '// IZI · ' + A_CLUBS[club].name;
+    idxLabel.innerHTML = '<b>ГОТОВ КАТАТЬ?</b>';
+    flash();
+    timer = setTimeout(() => {
+      cardBox.classList.remove('is-on');
+      root.classList.remove('is-card');
+      club = (club + 1) % A_CLUBS.length;
+      i = 0;
+      loop();
+    }, GS_HOLD);
+  };
+
+  root.__toggle = (on) => {
+    alive = on;
+    clearTimeout(timer);
+    if (on) loop();
+  };
+  animIO.observe(root);
+}
+
 buildAssembly(document.getElementById('stAssembly'));
 buildGlitch(document.getElementById('stGlitch'));
 buildBoom(document.getElementById('stBoom'));
 buildLevel(document.getElementById('stLevel'));
 buildDeck(document.getElementById('stDeck'));
 buildHolo(document.getElementById('stHolo'));
+buildGames(document.getElementById('stGames'));
