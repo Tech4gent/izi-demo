@@ -58,9 +58,11 @@ function msgBtns(raw, cls, clone) {
     `<a class="${cls} ${cls}--tg" href="https://t.me/+${raw}" target="_blank" rel="noopener"${tail}>${TG_ICON}<span>Telegram</span></a>`;
 }
 
-/* Карточка контактов клуба: одна и та же во всех вариантах карусели */
+/* Карточка контактов клуба. Заставка сверху - «загрузка карты» как в игре:
+   карусель включает её у каждой карточки отдельно, когда та въезжает в кадр. */
 function contactCard(club, clone) {
   const ph = clubPhone(club);
+  const no = CLUBS.filter((c) => c.city === club.city).indexOf(club) + 1;
   return `<article class="ccard"${clone ? ' aria-hidden="true"' : ''}>` +
     `<i class="club__corner club__corner--tl" aria-hidden="true"></i>` +
     `<i class="club__corner club__corner--br" aria-hidden="true"></i>` +
@@ -69,5 +71,11 @@ function contactCard(club, clone) {
     `<a class="ccard__phone" href="tel:+${ph.raw}"${clone ? ' tabindex="-1"' : ''}>${ph.phone}</a>` +
     (ph.stub ? `<div class="ccard__stub">общий номер сети</div>` : '') +
     `<div class="ccard__btns">${msgBtns(ph.raw, 'cbtn', clone)}</div>` +
+    `<div class="ccard__cover" aria-hidden="true">` +
+    `<div class="ccard__tag">КАРТА 0${no} · IZI</div>` +
+    `<div class="ccard__name">${club.name}</div>` +
+    `<div class="ccard__bar"><i class="ccard__fill"></i></div>` +
+    `<div class="ccard__row"><span>ЗАГРУЗКА КОНТАКТОВ</span><span>${no}/${CLUBS.filter((c) => c.city === club.city).length}</span></div>` +
+    `</div>` +
     `</article>`;
 }

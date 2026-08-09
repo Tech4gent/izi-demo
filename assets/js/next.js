@@ -144,6 +144,7 @@ let convHoldUntil = 0; // нажали на карточку - до этого �
 let convHold = 0; // 0..1: чтобы вставать и трогаться плавно, а не рывком
 let convCards = [];
 let convCenters = [];
+let convArmed = []; // карточка за правым краем ждёт своей «загрузки»
 
 function buildContacts(code) {
   const list = CLUBS.filter((c) => c.city === code);
@@ -156,7 +157,22 @@ function buildContacts(code) {
   // центры карточек внутри ленты: по ним считается разворот каждой относительно середины экрана
   convCards = [...convTrack.children];
   convCenters = convCards.map((c) => c.offsetLeft + c.offsetWidth / 2);
+  convArmed = convCards.map(() => true); // все ждут своей загрузки
   convPos = 0;
+}
+
+/* Заставка загрузки: включается у карточки, когда та въезжает в кадр справа.
+   Карточки входят по очереди, поэтому и грузятся вразнобой. */
+function convArm(card) { // за кадром возвращаем заставку на место
+  clearTimeout(card.__load);
+  card.classList.remove('is-open', 'is-load');
+}
+function convLoad(card, delay) {
+  clearTimeout(card.__load);
+  card.__load = setTimeout(() => {
+    card.classList.add('is-load'); // полоса заполняется
+    card.__load = setTimeout(() => card.classList.add('is-open'), 900); // заставка уезжает вверх
+  }, delay);
 }
 
 /* Бросок: тянем ленту за курсором или пальцем, на отпускании она
@@ -232,11 +248,24 @@ requestAnimationFrame(function convTick(now) {
     // боковые наклоны: центральная карточка развёрнута к зрителю, края уходят в глубину
     const mid = conveyor.clientWidth / 2;
     const ref = Math.min(mid, CONV_REF); // на таком отдалении от центра карточка уже полностью в наклоне
+    // загрузку включаем, когда карточка уже показалась из-за правого края,
+    // а взводим заново заметно дальше - чтобы состояние не дёргалось на границе
+    const startAt = conveyor.clientWidth - 280; // карточка уже заметно в кадре - заставку видно
+    const armAt = conveyor.clientWidth + 140;
     convCards.forEach((card, i) => {
-      const d = Math.max(-1.4, Math.min(1.4, (convCenters[i] - convPos - mid) / ref));
+      const x = convCenters[i] - convPos;
+      const d = Math.max(-1.4, Math.min(1.4, (x - mid) / ref));
       const flat = Math.abs(d);
       card.style.transform = `rotateY(${(-d * 50).toFixed(1)}deg) translateZ(${(-flat * 190).toFixed(0)}px)`;
       card.style.opacity = Math.max(0.14, 1 - flat * 0.6).toFixed(2);
+
+      if (x > armAt) {
+        // ушла за правый край (или лента перемоталась) - возвращаем заставку
+        if (!convArmed[i]) { convArmed[i] = true; convArm(card); }
+      } else if (convArmed[i] && x <= startAt) {
+        convArmed[i] = false;
+        convLoad(card, (i % 3) * 130); // лёгкий разнобой, чтобы соседние не грузились в такт
+      }
     });
   }
   requestAnimationFrame(convTick);

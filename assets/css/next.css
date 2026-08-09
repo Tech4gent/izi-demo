@@ -566,6 +566,50 @@
   color: var(--mut);
   margin-top: -0.3em;
 }
+/* -------- Заставка «загрузка карты» поверх карточки -------- */
+.ccard__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75em;
+  padding: 1.69em;
+  background:
+    radial-gradient(120% 90% at 15% 0%, rgba(43, 89, 255, 0.4), transparent 62%),
+    linear-gradient(180deg, #0a0b12, #05050a);
+  border-radius: inherit;
+  transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1);
+}
+.ccard.is-open .ccard__cover { transform: translateY(-101%); pointer-events: none; }
+.ccard__tag { font-family: var(--font-tech); font-size: 0.68em; letter-spacing: 0.3em; color: var(--yellow); }
+.ccard__name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.ccard__bar { height: 4px; border-radius: 2px; background: rgba(244, 245, 247, 0.14); overflow: hidden; }
+.ccard__fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 2px;
+  background: var(--yellow);
+  box-shadow: 0 0 14px rgba(255, 230, 0, 0.7);
+}
+.ccard.is-load .ccard__fill { animation: ccard-fill 0.9s cubic-bezier(0.4, 0.1, 0.2, 1) forwards; }
+@keyframes ccard-fill { from { width: 0; } to { width: 100%; } }
+.ccard__row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-tech);
+  font-size: 0.62em;
+  letter-spacing: 0.2em;
+  color: var(--mut);
+}
 .ccard__btns { display: flex; gap: 0.62em; margin-top: auto; padding-top: 0.75em; }
 .ccard__btns .cbtn { font-size: 0.87em; padding: 0.87em 1.19em; border-radius: 0.81em; gap: 0.56em; }
 .ccard__btns .cbtn svg { width: 1.19em; height: 1.19em; }
