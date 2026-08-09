@@ -143,6 +143,8 @@ const CONV_BASE = 35; // px/сек - базовая скорость, когда
 const CONV_BOOST_MAX = 620; // потолок разгона от прокрутки страницы
 const CONV_FLING_MAX = 2600; // потолок скорости от броска
 const CONV_REF = 250; // на таком отдалении от центра карточка уже полностью в наклоне
+const CONV_PERSP = 1500; // перспектива для проекции карточек, считаем её сами
+const CONV_DEPTH = 190; // на сколько отъезжает вглубь карточка в полном наклоне
 const CONV_HOLD = 2600; // мс паузы после нажатия на карточку
 let convPos = 0; // сдвиг ленты в px, всегда внутри [0, convSet)
 let convSet = 0; // ширина одного набора карточек: на неё отматываем назад
@@ -268,7 +270,13 @@ requestAnimationFrame(function convTick(now) {
       const x = convCenters[i] - convPos;
       const d = Math.max(-1.4, Math.min(1.4, (x - mid) / ref));
       const flat = Math.abs(d);
-      card.style.transform = `rotateY(${(-d * 50).toFixed(1)}deg) translateZ(${(-flat * 190).toFixed(0)}px)`;
+      // Перспективу считаем сами, а не отдаём браузеру общую на всю ленту:
+      // WebKit (Safari) сводит её иначе - соседние карточки разъезжались наружу
+      // и наезжали друг на друга. Своя проекция ведёт себя одинаково везде.
+      const z = flat * CONV_DEPTH;
+      const shift = (-(x - mid) * z) / (CONV_PERSP + z); // сдвиг к центру, как при общей перспективе
+      card.style.transform = `translateX(${shift.toFixed(1)}px) perspective(${CONV_PERSP}px) ` +
+        `rotateY(${(-d * 50).toFixed(1)}deg) translateZ(${(-z).toFixed(0)}px)`;
       card.style.opacity = Math.max(0.14, 1 - flat * 0.6).toFixed(2);
 
       // сдвиг точки открытия повторяется вместе с набором, поэтому шов остаётся невидимым
