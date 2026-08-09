@@ -69,9 +69,17 @@ function cityBounds(code) {
 }
 
 /* -------- Связка «карточка клуба ↔ маркер на карте» -------- */
+let switchingPopup = false; // открываем новое окошко - закрытие старого не должно гасить подсветку
+
 function setActive(id) {
   const club = CLUBS.find((c) => c.id === id);
   if (!club) return;
+  // Сначала окошко: Leaflet закроет предыдущее и выстрелит popupclose. Если красить
+  // до этого, clearActive стирал подсветку, и работала только первая карточка.
+  switchingPopup = true;
+  markers[id].openPopup();
+  switchingPopup = false;
+
   CLUBS.forEach((c) => {
     const el = markers[c.id].getElement(); // null, если маркер не на карте (другой город)
     if (!el) return;
@@ -81,12 +89,12 @@ function setActive(id) {
   document.querySelectorAll('.club[data-club]').forEach((card) => {
     card.classList.toggle('is-active', card.dataset.club === id);
   });
-  markers[id].openPopup();
   // сдвигаем минимально, только если окошко не влезает; сверху запас на всю его высоту
   netmap.panInside(L.latLng(club.ll), { paddingTopLeft: [60, 190], paddingBottomRight: [60, 40] });
 }
 
 function clearActive() {
+  if (switchingPopup) return;
   CLUBS.forEach((c) => {
     const el = markers[c.id].getElement();
     if (el) el.classList.remove('is-active', 'is-dim');

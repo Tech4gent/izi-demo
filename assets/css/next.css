@@ -76,6 +76,10 @@
 /* до выезда карточки стоят со сдвигом ±90px по бокам: на узком экране они
    растягивали страницу вширь и утаскивали за собой шапку - подрезаем секцию */
 .next .perf { overflow: hidden; }
+/* minmax(0,...): иначе колонка растягивается под крупную цифру внутри карточки */
+.next .perfcards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 900px) { .next .perfcards { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 380px) { .next .perfcard__value { font-size: 38px; } }
 .next .perfcard {
   text-align: left;
   background: var(--panel);
@@ -493,12 +497,37 @@
   .next .doors {
     grid-auto-flow: row;
     grid-auto-columns: auto;
-    grid-template-columns: repeat(2, 1fr);
+    /* minmax(0, 1fr): иначе колонка растягивается под самое длинное слово
+       в карточке и вылезает за экран */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     overflow-x: visible;
+    /* боковой запас нужен только ленте с прокруткой; в сетке он вылезал за экран */
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 @media (max-width: 600px) {
-  .next .doors { grid-template-columns: 1fr; }
+  .next .doors { grid-template-columns: minmax(0, 1fr); }
+  /* карточка на телефоне занимает всю ширину, и мелкий текст оставлял
+     правую половину пустой - поднимаем кегли, высота растёт следом */
+  .next .club { padding: 26px 24px 22px; gap: 11px; }
+  .next .club__no { font-size: 12px; }
+  /* кегль привязан к ширине экрана, длинные названия переносятся по слогам:
+     «КРАСНОРЕЧЕНСКАЯ» одной строкой не влезает ни при каком читаемом размере */
+  .next .club__name { font-size: min(27px, 6.6vw); hyphens: auto; overflow-wrap: break-word; }
+  .club__line { font-size: 13px; }
+  .club__line::before { width: 11px; height: 11px; }
+  .club__walk { font-size: 16.5px; }
+  .club__walk--plain { font-size: 15px; }
+  .club__addr { font-size: 16px; }
+  .club__zones { gap: 8px; }
+  .club__zones span { font-size: 12px; padding: 7px 11px; }
+  .club__foot { padding-top: 18px; }
+  .club__book { font-size: 13.5px; }
+  .club__route { font-size: 12.5px; }
+  .club__badge { font-size: 12px; padding: 4px 8px; }
 }
 
 /* -------- Значок 24/7 в карточке (там, где нет метро) -------- */
@@ -673,6 +702,9 @@
   /* на телефоне карточка не может занимать весь экран: соседние должны
      заглядывать по краям, иначе карусели не видно. Кегль - единственная
      ручка размера: всё внутри уменьшается вместе с ним в тех же пропорциях */
-  .ccard { font-size: min(12.4px, 2.95vw); width: min(68vw, 290px); margin-right: -40px; }
+  /* отступ отрицательный сильнее, чем на десктопе: на узком экране карточки
+     сильнее развёрнуты и укорачиваются, иначе между ними зияет дыра
+     (замер: средний видимый зазор 203 -> 45 px) */
+  .ccard { font-size: min(14.6px, 3.4vw); width: min(78vw, 330px); margin-right: -120px; }
   .ccard__btns .cbtn { flex: 1 1 0; min-width: 0; justify-content: center; }
 }
