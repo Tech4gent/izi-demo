@@ -239,10 +239,12 @@ requestAnimationFrame(function convTick(now) {
   const dt = Math.min(80, now - convLast); // после сворачивания вкладки не прыгаем
   convLast = now;
   if (convSet > 0) {
-    // прокрутка страницы подхватывает ленту: вниз - разгон вперёд, вверх - назад
-    const pageSpeed = ((window.scrollY - convScrollY) / dt) * 1000;
+    // Прокрутка страницы разгоняет ленту - в любую сторону крутишь, лента идёт
+    // вперёд. Назад её не пускаем: карточка тогда возвращается к правому краю,
+    // и заставка загрузки надевается на неё прямо на глазах.
+    const pageSpeed = Math.abs((window.scrollY - convScrollY) / dt) * 1000;
     convScrollY = window.scrollY;
-    const boost = Math.max(-CONV_BOOST_MAX, Math.min(CONV_BOOST_MAX, pageSpeed * 0.4));
+    const boost = Math.min(CONV_BOOST_MAX, pageSpeed * 0.4);
     // сглаживания нормированы по dt: одинаково на 30 и на 144 Гц
     convExtra += (boost - convExtra) * (1 - Math.exp(-dt / 130));
     convFling *= Math.exp(-dt / 320);
@@ -279,8 +281,14 @@ requestAnimationFrame(function convTick(now) {
   requestAnimationFrame(convTick);
 });
 
+// пересобираем ленту только когда меняется ШИРИНА: на мобиле resize стреляет
+// каждый раз, когда браузер прячет адресную строку, и лента пересобиралась
+// прямо во время просмотра - карточки на глазах снова одевались в заставку
 let convResizeTimer = null;
+let convWidth = window.innerWidth;
 window.addEventListener('resize', () => {
+  if (window.innerWidth === convWidth) return;
+  convWidth = window.innerWidth;
   clearTimeout(convResizeTimer);
   convResizeTimer = setTimeout(() => buildContacts(currentCity), 250);
 });
