@@ -322,10 +322,13 @@
 
 /* -------- Ярлыки клубов: сидят на кромке прайса, как закладки в ежедневнике -------- */
 .clubtabs {
+  position: relative;
+  z-index: 2; /* ярлыки поверх таблицы: активный должен закрыть её кромку собой */
   display: flex;
   gap: 4px;
-  margin-bottom: -1px; /* садимся прямо на кромку таблицы - получается один лист */
-  padding-top: 2px; /* запас под жёлтую кромку активного ярлыка */
+  /* нижний запас, иначе прокрутка обрезает перекрытие с таблицей */
+  padding: 2px 0;
+  margin-bottom: -3px;
   overflow-x: auto; /* на узком экране ярлыки не переносятся, а листаются */
   scrollbar-width: none;
 }
@@ -339,16 +342,18 @@
   padding: 11px 18px 13px;
   color: var(--mut);
   background: rgba(244, 245, 247, 0.04);
+  /* нижняя граница ложится ровно на кромку таблицы: у неактивных она её
+     продолжает, а активный красит её в цвет листа и тем самым стирает */
   border: 1px solid var(--line);
-  border-bottom-color: transparent;
   border-radius: 12px 12px 0 0;
   white-space: nowrap;
-  transition: background 0.25s ease, color 0.25s ease;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 .clubtab:hover { color: var(--white); background: rgba(244, 245, 247, 0.09); }
 .clubtab.is-active {
   color: var(--white);
   background: var(--panel); /* тот же фон, что у таблицы - ярлык и лист сливаются */
+  border-bottom-color: var(--panel);
   box-shadow: inset 0 2px 0 var(--yellow);
 }
 /* левый верхний угол таблицы срезаем: под ним стоит первый ярлык */
