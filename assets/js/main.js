@@ -90,10 +90,21 @@ const STATUSES = [
     'px;top:' + Math.round(box.height - 48) + 'px';
 })();
 
+/* На телефоне экран загрузки обязан уйти через 2 секунды после начала загрузки
+   страницы - он же определяет метрику скорости. Поэтому полосу тянем не
+   фиксированное время, а ровно то, что осталось до срока за вычетом растворения;
+   меньше 0.45 с не берём, иначе полоса просто мигает. На десктопе всё как было. */
+const МОБИЛЬНЫЙ_ЭКРАН = window.innerWidth <= 900;
+const СРОК_ЭКРАНА = 2000; // мс от старта страницы до полного ухода, только мобильный
+const УХОД = МОБИЛЬНЫЙ_ЭКРАН ? 0.52 : 0.88; // длительность растворения, см. hidePreloader
+const ПОЛОСА = МОБИЛЬНЫЙ_ЭКРАН
+  ? Math.max(0.45, (СРОК_ЭКРАНА - performance.now()) / 1000 - УХОД)
+  : 1.9;
+
 const loadState = { p: 0 };
 gsap.to(loadState, {
   p: 100,
-  duration: 1.9,
+  duration: ПОЛОСА,
   ease: 'power2.inOut',
   onUpdate() {
     const p = Math.round(loadState.p);
@@ -108,14 +119,18 @@ gsap.to(loadState, {
    проезд чёрной плашки на всю высоту идёт рывками */
 function hidePreloader() {
   gsap.timeline({
-    delay: 0.2,
+    delay: МОБИЛЬНЫЙ_ЭКРАН ? 0.08 : 0.2,
     onComplete() {
       preloader.style.display = 'none';
       ScrollTrigger.refresh();
     },
   })
-    .to('.preloader__inner, .preloader__hint', { opacity: 0, y: -16, duration: 0.35, ease: 'power2.in' })
-    .to(preloader, { opacity: 0, duration: 0.45, ease: 'power2.inOut' }, '-=0.12');
+    .to('.preloader__inner, .preloader__hint', {
+      opacity: 0, y: -16, duration: МОБИЛЬНЫЙ_ЭКРАН ? 0.22 : 0.35, ease: 'power2.in',
+    })
+    .to(preloader, {
+      opacity: 0, duration: МОБИЛЬНЫЙ_ЭКРАН ? 0.3 : 0.45, ease: 'power2.inOut',
+    }, МОБИЛЬНЫЙ_ЭКРАН ? '-=0.08' : '-=0.12');
   introHero();
 }
 
