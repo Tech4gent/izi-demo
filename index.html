@@ -3,9 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IZI - компьютерные клубы в Москве и Хабаровске. Цены, адреса, бронь</title>
+  <meta name="description" content="Сеть компьютерных клубов IZI: 4 клуба в Москве и 2 в Хабаровске. RTX 5080 и мониторы до 600 Гц, пинг 0.5 ms, цены от 130 ₽/час, круглосуточно.">
+  <meta name="keywords" content="компьютерный клуб, киберклуб, компьютерный клуб Москва, компьютерный клуб Хабаровск, IZI, аренда ПК, RTX 5080, игровой клуб 24 часа">
+  <!-- ЗАМЕНИТЬ ДОМЕН перед выкладкой: canonical, og:url, og:image, robots.txt, sitemap.xml -->
+  <link rel="canonical" href="https://izi-club.ru/">
   <meta name="robots" content="noindex, nofollow">
-  <title>IZI - компьютерный клуб. NO GAME - NO LIFE</title>
-  <meta name="description" content="Сеть компьютерных клубов IZI: Москва и Хабаровск. RTX 5080, мониторы до 600 Гц, пинг 0.5 ms, честные цены, 24/7.">
+  <meta name="theme-color" content="#050507">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="IZI · компьютерные клубы">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:title" content="IZI - компьютерные клубы в Москве и Хабаровске">
+  <meta property="og:description" content="6 клубов, RTX 5080 и мониторы до 600 Гц, пинг 0.5 ms, цены от 130 ₽/час, круглосуточно.">
+  <meta property="og:url" content="https://izi-club.ru/">
+  <meta property="og:image" content="https://izi-club.ru/assets/img/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <!-- всё, из чего собран экран загрузки, тянем в первую очередь: иначе текст
        успевает нарисоваться запасным шрифтом, а логотип появляется позже -->
   <link rel="preload" href="assets/fonts/tektur-cyr.woff2" as="font" type="font/woff2" crossorigin>
@@ -14,7 +28,9 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="assets/css/next.css">
-  <link rel="icon" href="assets/img/logo-white.png" type="image/png">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/img/logo-white.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 </head>
 <body class="next">
 
@@ -431,5 +447,67 @@
   <script src="assets/vendor/leaflet/leaflet.js"></script>
   <script src="assets/js/clubs.js"></script>
   <script src="assets/js/next.js"></script>
+
+  <!-- Разметка для поиска: сеть и каждый клуб отдельной организацией с адресом,
+       телефоном, координатами и режимом работы. ЗАМЕНИТЬ ДОМЕН перед выкладкой. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://izi-club.ru/#org",
+        "name": "IZI",
+        "alternateName": "IZI Cyber Zone",
+        "description": "Сеть компьютерных клубов IZI в Москве и Хабаровске",
+        "url": "https://izi-club.ru/",
+        "logo": "https://izi-club.ru/assets/img/logo-white.png",
+        "email": "izi.cyberzone@mail.ru",
+        "sameAs": ["https://vk.ru/izimsk", "https://vk.ru/izicyber"]
+      },
+      {
+        "@type": "InternetCafe", "name": "IZI Белорусская", "parentOrganization": { "@id": "https://izi-club.ru/#org" },
+        "url": "https://izi-club.ru/#adresa", "image": "https://izi-club.ru/assets/img/club-bel-1.jpg",
+        "telephone": "+7 995 900-50-17", "priceRange": "180-3690 ₽", "openingHours": "Mo-Su 00:00-23:59",
+        "address": { "@type": "PostalAddress", "addressLocality": "Москва", "streetAddress": "Большой Кондратьевский переулок, 12с1", "addressCountry": "RU" },
+        "geo": { "@type": "GeoCoordinates", "latitude": 55.773965, "longitude": 37.581563 }
+      },
+      {
+        "@type": "InternetCafe", "name": "IZI Курская", "parentOrganization": { "@id": "https://izi-club.ru/#org" },
+        "url": "https://izi-club.ru/#adresa", "image": "https://izi-club.ru/assets/img/club-kur-1.jpg",
+        "telephone": "+7 995 896-20-02", "priceRange": "180-2900 ₽", "openingHours": "Mo-Su 00:00-23:59",
+        "address": { "@type": "PostalAddress", "addressLocality": "Москва", "streetAddress": "улица Земляной Вал, 36с2", "addressCountry": "RU" },
+        "geo": { "@type": "GeoCoordinates", "latitude": 55.755494, "longitude": 37.655467 }
+      },
+      {
+        "@type": "InternetCafe", "name": "IZI Профсоюзная", "parentOrganization": { "@id": "https://izi-club.ru/#org" },
+        "url": "https://izi-club.ru/#adresa", "image": "https://izi-club.ru/assets/img/club-prof-1.jpg",
+        "telephone": "+7 995 900-85-30", "priceRange": "190-3440 ₽", "openingHours": "Mo-Su 00:00-23:59",
+        "address": { "@type": "PostalAddress", "addressLocality": "Москва", "streetAddress": "Нахимовский проспект, 38", "addressCountry": "RU" },
+        "geo": { "@type": "GeoCoordinates", "latitude": 55.6777, "longitude": 37.567235 }
+      },
+      {
+        "@type": "InternetCafe", "name": "IZI 1905 года", "parentOrganization": { "@id": "https://izi-club.ru/#org" },
+        "url": "https://izi-club.ru/#adresa", "openingHours": "Mo-Su 00:00-23:59",
+        "address": { "@type": "PostalAddress", "addressLocality": "Москва", "streetAddress": "улица 1905 года, 9с1", "addressCountry": "RU" },
+        "geo": { "@type": "GeoCoordinates", "latitude": 55.763863, "longitude": 37.560115 }
+      },
+      {
+        "@type": "InternetCafe", "name": "IZI Калинина", "parentOrganization": { "@id": "https://izi-club.ru/#org" },
+        "url": "https://izi-club.ru/#adresa", "image": "https://izi-club.ru/assets/img/club-kal-1.jpg",
+        "telephone": "+7 914 421-00-12", "priceRange": "130-1990 ₽", "openingHours": "Mo-Su 00:00-23:59",
+        "address": { "@type": "PostalAddress", "addressLocality": "Хабаровск", "streetAddress": "улица Калинина, 80", "addressCountry": "RU" },
+        "geo": { "@type": "GeoCoordinates", "latitude": 48.475085, "longitude": 135.063075 }
+      },
+      {
+        "@type": "InternetCafe", "name": "IZI Краснореченская", "parentOrganization": { "@id": "https://izi-club.ru/#org" },
+        "url": "https://izi-club.ru/#adresa", "image": "https://izi-club.ru/assets/img/club-kras-1.jpg",
+        "telephone": "+7 914 205-89-58", "priceRange": "130-1460 ₽", "openingHours": "Mo-Su 00:00-23:59",
+        "address": { "@type": "PostalAddress", "addressLocality": "Хабаровск", "streetAddress": "улица Краснореченская, 94", "addressCountry": "RU" },
+        "geo": { "@type": "GeoCoordinates", "latitude": 48.429373, "longitude": 135.111946 }
+      }
+    ]
+  }
+  </script>
 </body>
 </html>
