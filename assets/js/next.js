@@ -42,9 +42,9 @@ CLUBS.forEach((club) => {
   const icon = L.divIcon({
     className: 'lmk-wrap',
     html: `<div class="lmk"><i></i><b>${club.name}</b></div>`,
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-    popupAnchor: [0, -12],
+    iconSize: [28, 28], // область нажатия под палец, сама точка внутри 14 px
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -18],
   });
   const ph = clubPhone(club);
   const marker = L.marker(club.ll, { icon }).bindPopup(
@@ -119,15 +119,21 @@ netmap.on('popupopen', (e) => {
   el.addEventListener('pointerleave', scheduleClose);
 });
 
-/* Чипы зон в карточках клубов берём из тех же данных, что и прайс:
+/* Чипы зон и ссылка на бронь в карточках клубов - из тех же данных, что и прайс:
    набор зон у каждого клуба свой, руками их дублировать нельзя */
 document.querySelectorAll('.club[data-club]').forEach((card) => {
+  const club = CLUBS.find((c) => c.id === card.dataset.club);
+  if (!club) return;
   const box = card.querySelector('.club__zones');
-  if (!box) return;
-  const { data, own } = clubPrices(card.dataset.club);
-  box.innerHTML = own
-    ? data.zones.map((z) => `<span>${z.name}</span>`).join('')
-    : '<span class="club__soon">зоны уточняются</span>';
+  if (box) {
+    const { data, own } = clubPrices(club.id);
+    box.innerHTML = own
+      ? data.zones.map((z) => `<span>${z.name}</span>`).join('')
+      : '<span class="club__soon">зоны уточняются</span>';
+  }
+  // бронь ведём в LANGAME - это система клубов; у нового клуба её пока нет, там VK
+  const link = card.querySelector('.club__book');
+  if (link) link.href = club.book || CITIES[club.city].vk;
 });
 
 document.querySelectorAll('.club[data-club]').forEach((card) => {
@@ -215,6 +221,7 @@ let convCards = [];
 let convCenters = [];
 let convFills = []; // полосы загрузки в заставках
 let convOffsets = []; // у какой карточки заставка уезжает чуть раньше соседней
+let convBuilt = 0; // когда лента собиралась в последний раз
 
 function buildContacts(code) {
   const list = CLUBS.filter((c) => c.city === code);
@@ -241,6 +248,7 @@ function buildContacts(code) {
   // разнобой открытия: сдвиг повторяется с периодом набора, иначе клон
   // открывался бы не там, где оригинал, и шов стал бы заметен
   convOffsets = convCards.map((c, i) => (i % list.length) * 30);
+  convBuilt = performance.now();
   convPos = convSet; // держим ленту на набор правее нуля - слева остаётся запас
 }
 
@@ -251,7 +259,7 @@ let convClickGuard = false;
 
 conveyor.addEventListener('pointerdown', (e) => {
   if (e.button > 0) return;
-  convGrab = { x: e.clientX, lastX: e.clientX, pos: convPos, t: performance.now(), v: 0, moved: 0 };
+  convGrab = { x: e.clientX, lastX: e.clientX, pos: convPos, t: performance.now(), touch: performance.now(), v: 0, moved: 0 };
   convFling = 0;
   convClickGuard = false;
   conveyor.setPointerCapture(e.pointerId);
@@ -264,6 +272,7 @@ conveyor.addEventListener('pointermove', (e) => {
   convPos = convGrab.pos - shift;
   convGrab.moved = Math.max(convGrab.moved, Math.abs(shift));
   const now = performance.now();
+  convGrab.touch = now;
   const dt = now - convGrab.t;
   if (dt > 0) {
     convGrab.v = ((convGrab.lastX - e.clientX) / dt) * 1000; // px/сек в сторону хода ленты
@@ -283,6 +292,12 @@ function convRelease() {
 }
 conveyor.addEventListener('pointerup', convRelease);
 conveyor.addEventListener('pointercancel', convRelease);
+/* Ленту нельзя оставить «в руке»: если браузер потеряет захват указателя
+   (alt-tab с зажатой кнопкой, курсор за окном, системное окно поверх),
+   события до конвейера не дойдут и лента встанет намертво. */
+conveyor.addEventListener('lostpointercapture', convRelease);
+window.addEventListener('pointerup', convRelease);
+window.addEventListener('blur', convRelease);
 conveyor.addEventListener('click', (e) => {
   if (!convClickGuard) return;
   convClickGuard = false;
@@ -297,8 +312,15 @@ conveyor.addEventListener('focusin', () => { conveyor.scrollLeft = 0; });
 let convLast = performance.now();
 let convScrollY = window.scrollY;
 requestAnimationFrame(function convTick(now) {
+  // Следующий кадр заказываем ПЕРВОЙ строкой. Если что-то ниже упадёт с ошибкой,
+  // лента переживёт этот кадр и поедет дальше; заказ в конце убивал её навсегда.
+  requestAnimationFrame(convTick);
   const dt = Math.min(80, now - convLast); // после сворачивания вкладки не прыгаем
   convLast = now;
+  // страховка от зависания: рука «отпустилась» сама, если о ней ничего не слышно
+  if (convGrab && now - convGrab.touch > 2500) convRelease();
+  // ширину набора могли померить, когда лента ещё не разложилась - пересобираем
+  if (!(convSet > 0) && convCards.length && now - convBuilt > 800) buildContacts(currentCity);
   if (convSet > 0) {
     // Прокрутка страницы разгоняет ленту - в любую сторону крутишь, лента идёт
     // вперёд. Назад её не пускаем: карточка тогда возвращается к правому краю,
@@ -334,18 +356,21 @@ requestAnimationFrame(function convTick(now) {
       // и наезжали друг на друга. Своя проекция ведёт себя одинаково везде.
       const z = flat * CONV_DEPTH;
       const shift = (-(x - mid) * z) / (CONV_PERSP + z); // сдвиг к центру, как при общей перспективе
-      card.style.transform = `translateX(${shift.toFixed(1)}px) perspective(${CONV_PERSP}px) ` +
+      // одинаковые значения не переписываем: на слабых машинах это заметная экономия
+      const tr = `translateX(${shift.toFixed(1)}px) perspective(${CONV_PERSP}px) ` +
         `rotateY(${(-d * 50).toFixed(1)}deg) translateZ(${(-z).toFixed(0)}px)`;
-      card.style.opacity = Math.max(0.14, 1 - flat * 0.6).toFixed(2);
+      if (card.__tr !== tr) { card.style.transform = tr; card.__tr = tr; }
+      const op = Math.max(0.14, 1 - flat * 0.6).toFixed(2);
+      if (card.__op !== op) { card.style.opacity = op; card.__op = op; }
 
       // сдвиг точки открытия повторяется вместе с набором, поэтому шов остаётся невидимым
       const openAt = mid + 120 - convOffsets[i];
       const p = Math.max(0, Math.min(1, (startAt - x) / Math.max(160, startAt - openAt)));
       card.classList.toggle('is-open', p >= 1);
-      if (convFills[i]) convFills[i].style.width = (p * 100).toFixed(1) + '%';
+      const w = (p * 100).toFixed(1) + '%';
+      if (convFills[i] && card.__w !== w) { convFills[i].style.width = w; card.__w = w; }
     });
   }
-  requestAnimationFrame(convTick);
 });
 
 // пересобираем ленту только когда меняется ШИРИНА: на мобиле resize стреляет

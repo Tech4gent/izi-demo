@@ -211,10 +211,10 @@
 
 /* маркер клуба */
 .lmk-wrap { background: none; border: none; }
-.lmk { position: relative; width: 14px; height: 14px; }
+.lmk { position: relative; width: 28px; height: 28px; } /* область под палец */
 .lmk i {
   position: absolute;
-  inset: 0;
+  inset: 7px; /* сама точка 14 px по центру области */
   background: var(--yellow);
   border: 2px solid #050507;
   border-radius: 50%;
@@ -245,7 +245,7 @@
 .lmk-wrap.is-active .lmk b { color: var(--yellow); }
 .lmk b {
   position: absolute;
-  left: 22px;
+  left: 30px;
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--font-tech);
@@ -359,7 +359,22 @@
 /* левый верхний угол таблицы срезаем: под ним стоит первый ярлык */
 .next .pricewrap { border-top-left-radius: 0; }
 @media (max-width: 700px) {
-  .clubtab { font-size: 11px; padding: 10px 14px 12px; }
+  .clubtab { font-size: 11px; padding: 14px 14px 16px; }
+}
+
+/* -------- Тач-цели: на узком экране всё нажимаемое не меньше 44 px.
+   Без проверки pointer: coarse - эмуляторы и часть Android-браузеров
+   отдают pointer: fine, и правило до них не доезжало -------- */
+@media (max-width: 900px) {
+  .next .btn { min-height: 46px; }
+  .next .city-pick { min-height: 46px; padding-top: 12px; padding-bottom: 12px; }
+  .next .pricetab, .next .clubtab { min-height: 46px; }
+  .next .cbtn { min-height: 46px; }
+  .next .club__book, .next .club__route { min-height: 46px; display: inline-flex; align-items: center; }
+  .next .ccard__phone, .next .pop__phone { min-height: 46px; display: inline-flex; align-items: center; }
+  .next .header__nav a, .next .footer__nav a { padding: 14px 0; display: inline-block; }
+  .next .footer__soc a { padding: 13px 16px; }
+  .next .prices__swipe { padding: 6px 0; }
 }
 
 /* -------- Прайс на узком экране: колонка тарифов закреплена, есть подсказка -------- */

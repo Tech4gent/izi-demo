@@ -30,12 +30,12 @@ const CITIES = {
 
 // phone - номер конкретного клуба из описания группы VK; у нового клуба его пока нет
 const CLUBS = [
-  { id: 'bel', city: 'msk', name: 'БЕЛОРУССКАЯ', addr: 'Большой Кондратьевский пер., 12с1', ll: [55.773965, 37.581563], ya: 'https://yandex.ru/maps/-/CTrNyO5Z', phone: '+7 (995) 900-50-17', phoneRaw: '79959005017' },
-  { id: 'kur', city: 'msk', name: 'КУРСКАЯ', addr: 'ул. Земляной Вал, 36с2', ll: [55.755494, 37.655467], ya: 'https://yandex.ru/maps/-/CTrNyDyw', phone: '+7 (995) 896-20-02', phoneRaw: '79958962002' },
-  { id: 'prof', city: 'msk', name: 'ПРОФСОЮЗНАЯ', addr: 'Нахимовский просп., 38', ll: [55.6777, 37.567235], ya: 'https://yandex.ru/maps/-/CTrNyTJE', phone: '+7 (995) 900-85-30', phoneRaw: '79959008530' },
+  { id: 'bel', city: 'msk', name: 'БЕЛОРУССКАЯ', addr: 'Большой Кондратьевский пер., 12с1', ll: [55.773965, 37.581563], ya: 'https://yandex.ru/maps/-/CTrNyO5Z', phone: '+7 (995) 900-50-17', phoneRaw: '79959005017' , book: 'https://langame.ru/799456992_computerniy_club_izi-belorusskaya_moskva/booking' },
+  { id: 'kur', city: 'msk', name: 'КУРСКАЯ', addr: 'ул. Земляной Вал, 36с2', ll: [55.755494, 37.655467], ya: 'https://yandex.ru/maps/-/CTrNyDyw', phone: '+7 (995) 896-20-02', phoneRaw: '79958962002' , book: 'https://langame.ru/799452722_computerniy_club_izi-kurskaya_moskva/booking' },
+  { id: 'prof', city: 'msk', name: 'ПРОФСОЮЗНАЯ', addr: 'Нахимовский просп., 38', ll: [55.6777, 37.567235], ya: 'https://yandex.ru/maps/-/CTrNyTJE', phone: '+7 (995) 900-85-30', phoneRaw: '79959008530' , book: 'https://langame.ru/799454355_computerniy_club_izi-profsoyuznaya_moskva/booking' },
   { id: 'p1905', city: 'msk', name: '1905 ГОДА', addr: 'ул. 1905 года, 9с1', ll: [55.763863, 37.560115], ya: 'https://yandex.ru/maps/?text=%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%201905%20%D0%B3%D0%BE%D0%B4%D0%B0%2C%209%D1%811', phone: null, phoneRaw: null },
-  { id: 'kal', city: 'khv', name: 'КАЛИНИНА', addr: 'ул. Калинина, 80', ll: [48.475085, 135.063075], ya: 'https://yandex.ru/maps/-/CTrN5YM5', phone: '+7 (914) 421-00-12', phoneRaw: '79144210012' },
-  { id: 'kras', city: 'khv', name: 'КРАСНОРЕЧЕНСКАЯ', addr: 'ул. Краснореченская, 94', ll: [48.429373, 135.111946], ya: 'https://yandex.ru/maps/-/CTrN5Vj0', phone: '+7 (914) 205-89-58', phoneRaw: '79142058958' },
+  { id: 'kal', city: 'khv', name: 'КАЛИНИНА', addr: 'ул. Калинина, 80', ll: [48.475085, 135.063075], ya: 'https://yandex.ru/maps/-/CTrN5YM5', phone: '+7 (914) 421-00-12', phoneRaw: '79144210012' , book: 'https://langame.ru/799450551_computerniy_club_izi-kalinina_habarovsk/booking' },
+  { id: 'kras', city: 'khv', name: 'КРАСНОРЕЧЕНСКАЯ', addr: 'ул. Краснореченская, 94', ll: [48.429373, 135.111946], ya: 'https://yandex.ru/maps/-/CTrN5Vj0', phone: '+7 (914) 205-89-58', phoneRaw: '79142058958' , book: 'https://langame.ru/799451789_computerniy_club_izi-krasnorecenskaya_habarovsk/booking' },
 ];
 
 /* ============================================================

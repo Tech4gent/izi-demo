@@ -31,6 +31,8 @@
   <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="icon" href="assets/img/logo-white.png" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <!-- JS выключен - экран загрузки не показываем вовсе, иначе он закроет сайт -->
+  <noscript><style>.preloader { display: none !important; }</style></noscript>
 </head>
 <body class="next">
 
@@ -49,6 +51,14 @@
     </div>
     <div class="preloader__hint">DO WHAT YOU WANT</div>
   </div>
+  <script>
+    /* Страховка: если основной скрипт не загрузился или упал с ошибкой,
+       экран загрузки уйдёт сам через 8 секунд и не закроет сайт. */
+    setTimeout(function () {
+      var p = document.getElementById('preloader');
+      if (p) p.style.display = 'none';
+    }, 8000);
+  </script>
 
   <!-- ХЕДЕР -->
   <header class="header" id="header">
@@ -75,7 +85,7 @@
     <!-- 1. ГЛАВНАЯ: фото-хиро -->
     <section class="hero" id="hero">
       <div class="hero__bg" data-parallax>
-        <img src="assets/img/hero-hall.jpg" alt="Игровой зал IZI">
+        <img src="assets/img/hero-hall.jpg" alt="Игровой зал IZI" width="1920" height="1440">
       </div>
       <div class="hero__shade"></div>
       <div class="hero__content">
@@ -136,7 +146,7 @@
         </article>
       </div>
       <div class="club__wide" data-reveal>
-        <img src="assets/img/hall-pcs.jpg" alt="Ряд игровых компьютеров IZI">
+        <img src="assets/img/hall-pcs.jpg" alt="Ряд игровых компьютеров IZI" loading="lazy" decoding="async" width="1600" height="1200">
         <div class="club__wideinfo">
           <div class="club__widelabel">СОБРАНО ПОД СЕРЬЁЗНУЮ ИГРУ</div>
           <div class="club__widestats">
@@ -178,7 +188,7 @@
       </div>
       <div class="zonelist">
         <article class="zone" data-reveal>
-          <div class="zone__media"><img src="assets/img/duo-room.jpg" alt="Зона SUPER DUO"></div>
+          <div class="zone__media"><img src="assets/img/duo-room.jpg" alt="Зона SUPER DUO" loading="lazy" decoding="async" width="1600" height="901"></div>
           <div class="zone__body">
             <div class="zone__plate">SUPER DUO · SUPER VIP</div>
             <div class="zone__specs">
@@ -188,7 +198,7 @@
           </div>
         </article>
         <article class="zone zone--rev" data-reveal>
-          <div class="zone__media"><img src="assets/img/gear.jpg" alt="Зона VIP"></div>
+          <div class="zone__media"><img src="assets/img/gear.jpg" alt="Зона VIP" loading="lazy" decoding="async" width="1200" height="900"></div>
           <div class="zone__body">
             <div class="zone__plate">VIP</div>
             <div class="zone__specs">
@@ -198,7 +208,7 @@
           </div>
         </article>
         <article class="zone" data-reveal>
-          <div class="zone__media"><img src="assets/img/hall-pcs.jpg" alt="Зона COMFORT"></div>
+          <div class="zone__media"><img src="assets/img/hall-pcs.jpg" alt="Зона COMFORT" loading="lazy" decoding="async" width="1600" height="1200"></div>
           <div class="zone__body">
             <div class="zone__plate">COMFORT</div>
             <div class="zone__specs">
@@ -212,30 +222,30 @@
       <!-- лента: свежие залы всех пяти клубов сети плюс мерч -->
       <div class="gallery" aria-hidden="true">
         <div class="gallery__track" data-marquee-slow>
-          <img src="assets/img/club-prof-1.jpg" alt="">
-          <img src="assets/img/club-kur-1.jpg" alt="">
-          <img src="assets/img/club-kal-1.jpg" alt="">
-          <img src="assets/img/club-bel-1.jpg" alt="">
-          <img src="assets/img/club-kras-1.jpg" alt="">
-          <img src="assets/img/merch-hoodie.jpg" alt="">
-          <img src="assets/img/club-prof-2.jpg" alt="">
-          <img src="assets/img/club-kal-2.jpg" alt="">
-          <img src="assets/img/club-kras-2.jpg" alt="">
-          <img src="assets/img/club-bel-2.jpg" alt="">
-          <img src="assets/img/club-kur-2.jpg" alt="">
-          <img src="assets/img/merch-jackets.jpg" alt="">
-          <img src="assets/img/club-prof-1.jpg" alt="">
-          <img src="assets/img/club-kur-1.jpg" alt="">
-          <img src="assets/img/club-kal-1.jpg" alt="">
-          <img src="assets/img/club-bel-1.jpg" alt="">
-          <img src="assets/img/club-kras-1.jpg" alt="">
-          <img src="assets/img/merch-hoodie.jpg" alt="">
-          <img src="assets/img/club-prof-2.jpg" alt="">
-          <img src="assets/img/club-kal-2.jpg" alt="">
-          <img src="assets/img/club-kras-2.jpg" alt="">
-          <img src="assets/img/club-bel-2.jpg" alt="">
-          <img src="assets/img/club-kur-2.jpg" alt="">
-          <img src="assets/img/merch-jackets.jpg" alt="">
+          <img src="assets/img/club-prof-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="600">
+          <img src="assets/img/club-kur-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="507">
+          <img src="assets/img/club-kal-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="675">
+          <img src="assets/img/club-bel-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="675">
+          <img src="assets/img/club-kras-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="675">
+          <img src="assets/img/merch-hoodie.jpg" alt="" loading="lazy" decoding="async" width="1200" height="676">
+          <img src="assets/img/club-prof-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="600">
+          <img src="assets/img/club-kal-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="600">
+          <img src="assets/img/club-kras-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="675">
+          <img src="assets/img/club-bel-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="507">
+          <img src="assets/img/club-kur-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="507">
+          <img src="assets/img/merch-jackets.jpg" alt="" loading="lazy" decoding="async" width="1200" height="900">
+          <img src="assets/img/club-prof-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="600">
+          <img src="assets/img/club-kur-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="507">
+          <img src="assets/img/club-kal-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="675">
+          <img src="assets/img/club-bel-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="675">
+          <img src="assets/img/club-kras-1.jpg" alt="" loading="lazy" decoding="async" width="900" height="675">
+          <img src="assets/img/merch-hoodie.jpg" alt="" loading="lazy" decoding="async" width="1200" height="676">
+          <img src="assets/img/club-prof-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="600">
+          <img src="assets/img/club-kal-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="600">
+          <img src="assets/img/club-kras-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="675">
+          <img src="assets/img/club-bel-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="507">
+          <img src="assets/img/club-kur-2.jpg" alt="" loading="lazy" decoding="async" width="900" height="507">
+          <img src="assets/img/merch-jackets.jpg" alt="" loading="lazy" decoding="async" width="1200" height="900">
         </div>
       </div>
     </section>
@@ -399,7 +409,7 @@
         </article>
       </div>
 
-      <div class="adresa__note" data-reveal>Открыто 24/7. Пиши в VK своего города - подскажем свободные места и поможем с бронью.</div>
+      <div class="adresa__note" data-reveal>Открыто 24/7. «Забронировать» открывает онлайн-бронь клуба - место можно занять заранее. Если удобнее словами, пиши в VK своего города.</div>
     </section>
 
     <!-- 7. КОНТАКТЫ выбранного города -->
@@ -447,6 +457,13 @@
   <script src="assets/vendor/leaflet/leaflet.js"></script>
   <script src="assets/js/clubs.js"></script>
   <script src="assets/js/next.js"></script>
+
+  <!-- ВПИСАТЬ НОМЕРА СЧЁТЧИКОВ: пока пусто - ничего не грузится и не шлётся -->
+  <script>
+    window.IZI_METRIKA = ''; /* номер счётчика Яндекс.Метрики, например 98765432 */
+    window.IZI_GA = '';      /* поток Google Analytics 4, например G-XXXXXXXXXX */
+  </script>
+  <script src="assets/js/analytics.js" defer></script>
 
   <!-- Разметка для поиска: сеть и каждый клуб отдельной организацией с адресом,
        телефоном, координатами и режимом работы. ЗАМЕНИТЬ ДОМЕН перед выкладкой. -->
