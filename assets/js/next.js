@@ -119,6 +119,17 @@ netmap.on('popupopen', (e) => {
   el.addEventListener('pointerleave', scheduleClose);
 });
 
+/* Чипы зон в карточках клубов берём из тех же данных, что и прайс:
+   набор зон у каждого клуба свой, руками их дублировать нельзя */
+document.querySelectorAll('.club[data-club]').forEach((card) => {
+  const box = card.querySelector('.club__zones');
+  if (!box) return;
+  const { data, own } = clubPrices(card.dataset.club);
+  box.innerHTML = own
+    ? data.zones.map((z) => `<span>${z.name}</span>`).join('')
+    : '<span class="club__soon">зоны уточняются</span>';
+});
+
 document.querySelectorAll('.club[data-club]').forEach((card) => {
   const id = card.dataset.club;
   if (finePointerNext) {
@@ -159,9 +170,13 @@ function renderPrices(id) {
       r.wd.map((v, i) => `<td${duo(i)} data-wd="${v}" data-we="${r.we[i]}">${mode === 'we' ? r.we[i] : v}</td>`).join('') +
       '</tr>').join('') +
     '</tbody></table>';
-  priceNote.textContent = own
-    ? `Прайс клуба «${club.name}». Тарифы других клубов сети смотри на соседних вкладках.`
-    : `Для клуба «${club.name}» прайс уточняется - показан прайс клуба на Белорусской. Актуальные цены подскажут в группе VK.`;
+  // отдельные тарифы вроде OPEN и PRIVATE есть не везде
+  const extra = own && data.extra
+    ? '<span class="price__extra">Отдельно: ' + data.extra.map(([n, v]) => `<b>${n}</b> - ${v} ₽`).join(' · ') + '</span> '
+    : '';
+  priceNote.innerHTML = extra + (own
+    ? `Прайс клуба «${club.name}». У других клубов сети свои зоны и цены - смотри соседние вкладки.`
+    : `Для клуба «${club.name}» прайс уточняется - показан прайс клуба на Белорусской. Актуальные цены подскажут в группе VK.`);
 }
 
 function renderPriceTabs(code) {

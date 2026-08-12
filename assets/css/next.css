@@ -392,6 +392,15 @@
   .next .pricetable td span { font-size: 11px; }
 }
 
+/* набор зон по клубам разный - честная сноска под блоком зон */
+.zones__note {
+  margin-top: clamp(18px, 2.4vw, 28px);
+  max-width: 78ch;
+  font-size: 13.5px;
+  color: var(--mut);
+}
+.zones__note a { color: var(--yellow); border-bottom: 1px solid rgba(255, 230, 0, 0.4); }
+
 /* -------- Цена в спеках зоны: порядок блоков от дорогой к дешёвой -------- */
 .next .zone__price {
   border-color: rgba(255, 230, 0, 0.7) !important;
@@ -571,6 +580,20 @@
   .club__route { font-size: 12.5px; }
   .club__badge { font-size: 12px; padding: 4px 8px; }
 }
+
+/* зоны клуба ещё не заведены в системе - честная пометка вместо чипов */
+.club__soon {
+  font-family: var(--font-tech);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mut);
+  border: 1px dashed var(--line);
+  border-radius: 7px;
+  padding: 5px 9px;
+}
+.price__extra { display: block; color: var(--white); margin-bottom: 4px; }
+.price__extra b { color: var(--yellow); font-weight: 700; }
 
 /* -------- Значок 24/7 в карточке (там, где нет метро) -------- */
 .club__badge {
