@@ -540,7 +540,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 @keyframes gallery-shift { to { transform: translateX(calc(-50% - 8px)); } }
 .gallery__track img {
+  width: auto;
   height: clamp(150px, 18vw, 230px);
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
   border-radius: 16px;
   border: 1px solid var(--line);
 }
